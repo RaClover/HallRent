@@ -1,0 +1,114 @@
+{
+  "countries": [
+    {
+      "country": "اليابان",
+      "car_manufacturers": [
+        {
+          "name": "تايوتا",
+          "car_brands": [
+            "كورلا"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "المانيا",
+      "car_manufacturers": [
+        {
+          "name": "فولكسواجن",
+          "car_brands": [
+            "بولو"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "امريكا",
+      "car_manufacturers": [
+        {
+          "name": "جنرال موتورز",
+          "car_brands": [
+            "سوبربان"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "كوريا",
+      "car_manufacturers": [
+        {
+          "name": "هونداي",
+          "car_brands": [
+            "سوناتا"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "فرنسا",
+      "car_manufacturers": [
+        {
+          "name": "رينو",
+          "car_brands": [
+            "رينو 1"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "الهند",
+      "car_manufacturers": [
+        {
+          "name": "بهارات",
+          "car_brands": [
+            "برياني"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "ايطاليا",
+      "car_manufacturers": [
+        {
+          "name": "فيراري",
+          "car_brands": [
+            "لافيراري"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "السويد",
+      "car_manufacturers": [
+        {
+          "name": "فولفو",
+          "car_brands": [
+            "مش عارف"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "الصين",
+      "car_manufacturers": [
+        {
+          "name": "جيلي",
+          "car_brands": [
+            "لوتس"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "المملكة المتحدة",
+      "car_manufacturers": [
+        {
+          "name": "لاند روفر",
+          "car_brands": [
+            "لاند روفر سبورت"
+          ]
+        }
+      ]
+    }
+  ]
+}
