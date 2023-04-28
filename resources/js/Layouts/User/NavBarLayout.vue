@@ -12,14 +12,16 @@ export default defineComponent({
 <template>
     <div class="flex flex-col  mt-32">
         <!-- Navbar -->
-        <nav class="flex justify-around py-4 bg-white/80
+        <nav class="flex justify-around py-1 bg-white/80
             backdrop-blur-md shadow-md w-full
             fixed top-0 left-0 right-0 z-10">
 
             <!-- Logo Container -->
             <div class="flex items-center">
                 <!-- Logo -->
-                <Link class="cursor-pointer">
+                <Link
+                    :href="route('homePage')"
+                    class="cursor-pointer">
                     <h3 class="text-2xl font-medium text-blue-500">
                         <img class="max-h-16 object-cover rounded-full"
                              src="https://cdn.dribbble.com/userupload/3158902/file/original-7c71bfa677e61dea61bc2acd59158d32.jpg?resize=400x0" alt="Store Logo">
@@ -29,7 +31,9 @@ export default defineComponent({
 
             <!-- Links Section -->
             <div class="items-center hidden space-x-8 lg:flex">
-                <Link class="flex text-gray-600 hover:text-blue-500
+                <Link
+                    :href="route('homePage')"
+                    class="flex text-gray-600 hover:text-blue-500
                     cursor-pointer transition-colors duration-300">
                     Home
                 </Link>
@@ -56,7 +60,9 @@ export default defineComponent({
                     Blog
                 </Link>
 
-                <Link class="flex text-gray-600 hover:text-blue-500
+                <Link
+                    :href="route('aboutUs')"
+                    class="flex text-gray-600 hover:text-blue-500
                     cursor-pointer transition-colors duration-300">
                     About Us
                 </Link>
