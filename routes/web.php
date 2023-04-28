@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\RedirectAuthenticatedUsersController;
 use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\HallsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +24,8 @@ use App\Http\Controllers\User\HomeController;
 */
 
 Route::get('/' , [HomeController::class , 'home'])->name('homePage');
+Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
+Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
 
 
 
