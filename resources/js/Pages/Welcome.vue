@@ -1,8 +1,25 @@
 <script setup>
-import {Link, router} from "@inertiajs/vue3";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
+import {Link} from "@inertiajs/vue3";
+import pickBy from 'lodash/pickBy'
+import throttle from 'lodash/throttle'
+import mapValues from 'lodash/mapValues'
+import {watchEffect} from "vue";
+import { router } from '@inertiajs/vue3'
+import {InertiaLink} from "@inertiajs/inertia-vue3";
+import { get, replace } from '@inertiajs/inertia';
+import CityCards from "@/Components/User/WelcomePage/CityCards.vue";
+
+
+
+defineProps({
+   address:{
+       type: Array ,
+       required: true
+   }
+})
 </script>
 
 
@@ -15,48 +32,69 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
                 <div class="md:w-full pr-4 pl-4">
                     <div class="text-bg text-center pb-12">
                         <div class="padding_lert">
-                            <h1 class="text-white text-5xl pb-4 font-bold uppercase">WELCOME TO HALLS RENTING </h1>
-                            <span class="text-white text-5xl font-bold pb-5 block">LANDING PAGE</span>
-                            <p class="text-white text-base leading-7 pb-16">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
-                            <a
-                                class="text-base bg-white text-black font-medium w-full text-center inline-block bg-yellow-500 text-white"
-                                href="#">Read More</a>
+                            <h1 class="text-white text-5xl pb-8 mb-10 font-bold uppercase">WELCOME TO HALLS RENTING </h1>
+                            <div class=" rounded-xl">
+                                <div class="grid  xl:grid-cols-4 gap-4 ">
+                                    <div class="flex flex-col p-1">
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            placeholder="City"
+                                            class="mt-2 block w-full rounded-md border-gray-300 focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                                        >
+                                    </div>
+
+                                    <div class="flex flex-col">
+                                        <input
+                                            type="date"
+                                            id="date"
+                                            placeholder="johndoe@example.com"
+                                            class="mt-2 block w-full rounded-md border-gray-300  focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                                        >
+                                    </div>
+
+                                    <div class="flex flex-col">
+                                        <input
+                                            type="date"
+                                            id="date"
+                                            class="mt-2 block w-full rounded-md border-gray-300  focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                                        >
+                                    </div>
+
+
+
+
+                                    <div class="flex flex-col ">
+                                        <input
+                                            type="submit"
+                                            id="date"
+                                            class="mt-2  pt-2 py-2  w-1/2 rounded-lg text-stone-50 bg-orange-300 hover:bg-orange-400 font-bold  transition ease-in-out duration-200 translate-10"
+                                        >
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
+
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- end banner -->
-    <!-- form_lebal -->
-    <section>
-        <div class="container mx-auto sm:px-40 mx-auto sm:px-1">
-            <div class="flex flex-wrap ">
-                <div class="md:w-full pr-4 pl-4">
-                    <form class="form_book">
-                        <div class="flex flex-wrap ">
-                            <div class="md:w-1/4 pr-4 pl-4">
-                                <label class="date">ARRIVAL DATE</label>
-                                <input class="book_n"  type="date" >
-                            </div>
-                            <div class="md:w-1/4 pr-4 pl-4">
-                                <label class="date">DEPARTURE DATE</label>
-                                <input class="book_n"  type="date" >
-                            </div>
-                            <div class="md:w-1/4 pr-4 pl-4">
-                                <label class="date">PERSON</label>
-                                <input class="book_n" placeholder="2" type="type" name="2">
-                            </div>
-                            <div class="md:w-1/4 pr-4 pl-4">
-                                <button class="book_btn">Book Now</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+
         </div>
     </section>
 
+
+
+
+
+
+
+   <CityCards :address="address"/>
 
     <!-- choose  section -->
     <div class="choose">
@@ -94,6 +132,7 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
         </div>
     </div>
     <!-- end choose  section -->
+
 </NavBarLayout>
 </template>
 
@@ -102,8 +141,8 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
 /** banner section **/
 
 .banner_main {
-    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3s5Xlft62YXNeIsDKfZE10z91JcGRzAWMQPOxbe46U5nIVXGH-0U53Afqy4WGiakkKy0&usqp=CAU');
-    min-height: 700px;
+    background: url('https://static.vecteezy.com/system/resources/previews/011/651/324/original/newyork-city-highrise-skyline-simplicity-flat-design-free-png.png');
+    min-height: 300px;
     display: flex;
     justify-content: center;
     align-content: center;
@@ -113,34 +152,14 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
 
 .text-bg {
     text-align: center;
-    padding-bottom: 50px;
+    padding-bottom: 80px;
 }
 
 .text-bg h1 {
-    color: #fff;
-    font-size: 50px;
-    line-height: 50px;
-    padding-bottom: 15px;
-    font-weight: bold;
-    text-transform: uppercase;
+    color: rgba(255, 0, 0, 0.63);
+    line-height: 1px;
+    font: italic 3em "Fira Sans", serif;
 }
-
-.text-bg span {
-    color: #fff;
-    font-size: 45px;
-    line-height: 50px;
-    font-weight: bold;
-    padding-bottom: 20px;
-    display: block;
-}
-
-.text-bg p {
-    color: #fff;
-    font-size: 17px;
-    line-height: 28px;
-    padding-bottom: 60px;
-}
-
 .text-bg a {
     font-size: 17px;
     background-color: #fff;
@@ -175,22 +194,6 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
     padding: 0;
 }
 
-.d_flex {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-
-/** banner section **/
-
-.form_book {
-    background: white;
-    margin-top: -104px;
-    padding: 30px 8px 8px 60px;
-    border-radius: 40px 40px 0px 0px;
-}
-
 .form_book .date {
     color: #7e7e7e;
     font-weight: bold;
@@ -198,52 +201,6 @@ import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
     text-transform: uppercase;
     padding-left: 17px;
 }
-
-.book_n {
-    border: inherit;
-    border-radius: 20px;
-    background-color: #eeeeee;
-    width: 100%;
-    font-size: 16px;
-    height: auto;
-    line-height: normal;
-    padding: 10px 20px;
-    -webkit-appearance: none !important;
-}
-
-
-.book_btn {
-    font-size: 17px;
-    background-color: #000;
-    color: #fff;
-    font-weight: 500;
-    padding: 5px 0px;
-    width: 100%;
-    max-width: 161px;
-    text-align: center;
-    display: inline-block;
-    transition: ease-in all 0.5s;
-    border-radius: 10px;
-    margin-top: 33px;
-}
-
-.book_btn:hover {
-    background-color: #eec237;
-    color: #fff;
-    transition: ease-in all 0.5s;
-    border-radius: 25px
-}
-
-
-/** banner section **/
-
-
-
-/** Choose  section **/
-
-
-/** Choose  section **/
-
 .choose {
     margin-top: 90px;
 }
