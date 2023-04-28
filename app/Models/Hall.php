@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Hall extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'description',
+        'user_id',
+        'address_id'
+    ];
 
 
     public function user():BelongsTo
@@ -23,11 +31,4 @@ class Hall extends Model
     {
         return $this->hasOne(Address::class);
     }
-
-    public function images():HasMany
-    {
-        return $this->hasMany(HallImages::class);
-    }
-
-
 }
