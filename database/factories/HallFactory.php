@@ -20,18 +20,7 @@ class HallFactory extends Factory
             'name' => fake()->name,
             'email' => fake()->email,
             'phone' =>  fake()->phoneNumber,
-//            'timeWork' => json_encode([
-//                fake()->dayOfMonth,
-//                fake()->dayOfMonth,
-//                fake()->dayOfMonth
-//            ]),
-//            'marketLogo' => fake()->name,
-////            'brandType' => json_encode([
-////                fake()->name,
-////                fake()->name,
-////                fake()->name
-////            ]),
-//            'ratingNum' => fake()->numberBetween(1,5),
+            'description' => fake()->paragraph,
             'created_at' => now(),
             'updated_at' => now(),
         ];
