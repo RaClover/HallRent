@@ -13,10 +13,14 @@ class HallsController extends Controller
     {
         $halls = Hall::whereHas('address', function ($query) use ($city) {
             $query->where('city', $city);
-        })->get();
+        })->paginate(18);
+        $links = $halls->links()->toHtml();
         return Inertia::render('User/Halls' , [
             'halls' => $halls ,
-            'city' => $city
+            'city' => $city ,
+            'links' => $links,
         ]);
     }
+
+
 }
