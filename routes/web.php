@@ -22,10 +22,12 @@ use App\Http\Controllers\User\HallsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/' , [HomeController::class , 'home'])->name('homePage');
+Route::get('/', [HomeController::class, 'home'])->name('homePage');
 Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
 Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
+Route::get('/{city}/hall/{hallName}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
+
+
 
 
 
@@ -41,7 +43,7 @@ Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.in
              Route::get('/profile', [SuperProfileController::class, 'edit'])->name('profile.edit');
              Route::patch('/profile', [SuperProfileController::class, 'update'])->name('profile.update');
              Route::delete('/profile', [SuperProfileController::class, 'destroy'])->name('profile.destroy');
-                 Route::inertia('/dashboard', 'Super/SuperDashboard')->name('dashboard');
+             Route::inertia('/dashboard', 'Super/SuperDashboard')->name('dashboard');
              Route::get('/displayAdmins',[AdminsController::class,'index'])->name('admins');
     });
 
