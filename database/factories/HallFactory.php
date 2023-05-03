@@ -19,8 +19,10 @@ class HallFactory extends Factory
         return [
             'name' => fake()->name,
             'email' => fake()->email,
-            'phone' =>  fake()->phoneNumber,
             'description' => fake()->paragraph,
+            'phone' =>  fake()->phoneNumber,
+            'price' => fake()->randomFloat(2, 50, 500),
+            'size' => fake()->numberBetween(50, 500),
             'created_at' => now(),
             'updated_at' => now(),
         ];
