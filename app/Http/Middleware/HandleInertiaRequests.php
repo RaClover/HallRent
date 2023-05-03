@@ -35,27 +35,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        // to share the cart items into all components
-        $cartItems = [];
-
-        if (Auth::check()) {
-            // User is logged in
-            $user = Auth::user();
-
-            // Show the user's cart items from the database
-            $cart = $user->cart;
-            if ($cart) {
-                $cartItems = $cart->cartItems()->with('item')->get()->toArray();
-            }
-        } else {
-            // User is not logged in, show cart items from session
-            $sessionCartItems = session()->get('cart');
-            $cartItems = $sessionCartItems;
-        }
-
-        $totalAmount = $this->calculateTotalAmount($cartItems);
-
-
         return array_merge(parent::share($request), [
             'csrf' => $request->session()->token(),
             'license' => fn () => $request->session()->get('licenseExist'),
@@ -71,28 +50,10 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-
-            'cartItems' => $cartItems,
-            'cartItemCount' => count((array)$cartItems),
-            'totalAmount' => $totalAmount,
             'flash' => [
-                'message' => $request->session()->get('message')
+                'message' => session('message')
             ],
         ]);
-    }
-
-
-    private function calculateTotalAmount($cartItems)
-    {
-        $totalAmount = 0;
-
-        if (is_array($cartItems)) {
-            foreach ($cartItems as $item) {
-                $totalAmount += $item['quantity'] * $item['item']['price'];
-            }
-        }
-
-        return $totalAmount;
     }
 
 }
