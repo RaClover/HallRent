@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(1)->has(
             Hall::factory()->has(
-                Address::factory()->count(1)
-            )->count(2)
+                Address::factory()->count(10)
+            )->count(1)
         )->create();
     }
 }
