@@ -1,618 +1,484 @@
-<script>
+<script setup>
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
 import {Link} from "@inertiajs/vue3";
+import { router } from '@inertiajs/vue3'
+import HallSearchFilter from "@/Components/User/HallsFilters/HallSearchFilter.vue";
+import HallTypeFilter from "@/Components/User/HallsFilters/HallTypeFilter.vue";
+import HallPriceFilter from "@/Components/User/HallsFilters/HallPriceFilter.vue";
+import HallCard from "@/Components/User/Halls/HallCard.vue";
+import Pagination from "@/Components/User/Halls/Pagination.vue";
+import pickBy from "lodash/pickBy";
+import {watch, ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import SortHalls from "@/Components/User/HallsFilters/SortHalls.vue";
+import AppliedFilters from "@/Components/User/HallsFilters/AppliedFilters.vue";
+import FooterLayout from "@/Layouts/User/FooterLayout.vue";
 
 
-export default {
-    name: "Halls" ,
+const props = defineProps({
+    halls: Array ,
+    types: Array,
+    city: String ,
+    links: String,
+    type: String,
+    search: String,
+    min_price: String,
+    max_price: String,
+    sortBy: String,
+});
 
-    components: {
-        NavBarLayout,
-        Link
 
-    } ,
-    props: {
-        halls: Array ,
-        city: String ,
-        links: String
-    } ,
-    data() {
-        return {
-            expanded: [false, false],
-        };
-    },
-    methods: {
-        toggleSection(index) {
-            this.expanded[index] = !this.expanded[index];
-        },
-    },
+const filters = ref({
+    type: props.type,
+    search: props.search,
+    min_price: props.min_price,
+    max_price: props.max_price,
+    sortBy: props.sortBy,
+});
+
+const setType = (value) => {
+    filters.value.type = value
 }
+
+const setPrice = (value) => {
+    filters.value.min_price = value.selectedMin;
+    filters.value.max_price = value.selectedMax;
+}
+
+const setSearch = (value) => {
+    filters.value.search = value
+}
+
+const setSortBy = (value) => {
+    filters.value.sortBy = value
+}
+
+watch(filters.value, value => {
+    Inertia.get(route("halls.index",  {city: props.city}), pickBy(value), {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+
+
 </script>
 
 <template>
 <NavBarLayout>
 
-    <div class="bg-white">
+    <div class="sm:flex">
+        <div class="sm:w-64 sm:border-r">
+            <HallSearchFilter
+                :search="props.search"
+                @setSearch="setSearch"
+            ></HallSearchFilter>
 
-<!--        this for the mobile style (responsive style) and it is hidden yet-->
-            <div class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
+            <HallTypeFilter
+                :type="props.type"
+                :types="props.types"
+                @setType="setType"
+            ></HallTypeFilter>
 
+            <HallPriceFilter
+                :min_price="props.min_price"
+                :max_price="props.max_price"
+                @setPrice="setPrice"
+            ></HallPriceFilter>
+        </div>
 
-                <div class="fixed inset-0 z-40 flex">
-                    <!--
-                      Off-canvas menu, show/hide based on off-canvas menu state.
+        <div class="flex-1 relative pt-8 sm:px-10">
 
-                      Entering: "transition ease-in-out duration-300 transform"
-                        From: "translate-x-full"
-                        To: "translate-x-0"
-                      Leaving: "transition ease-in-out duration-300 transform"
-                        From: "translate-x-0"
-                        To: "translate-x-full"
-                    -->
-                    <div class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
-                        <div class="flex items-center justify-between px-4">
-                            <h2 class="text-lg font-medium text-gray-900">Filters</h2>
-                            <button type="button" class="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400">
-                                <span class="sr-only">Close menu</span>
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+            <header class="flex items-center justify-between mb-10">
+                <h2 class="text-4xl uppercase font-medium">Shop</h2>
 
-                        <!-- Filters -->
-                        <form class="mt-4 border-t border-gray-200">
-                            <h3 class="sr-only">Categories</h3>
-                            <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-                                <li>
-                                    <a href="#" class="block px-2 py-3">Totes</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-2 py-3">Backpacks</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-2 py-3">Travel Bags</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-2 py-3">Hip Bags</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-2 py-3">Laptop Sleeves</a>
-                                </li>
-                            </ul>
+                <SortHalls
+                    :sortBy="props.sortBy"
+                    @setSortBy="setSortBy"
+                ></SortHalls>
+            </header>
 
-                            <div class="border-t border-gray-200 px-4 py-6">
-                                <h3 class="-mx-2 -my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-0" aria-expanded="false">
-                                        <span class="font-medium text-gray-900">Color</span>
-                                        <span class="ml-6 flex items-center">
-                    <!-- Expand icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-mobile-0">
-                                    <div class="space-y-6">
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-0" class="ml-3 min-w-0 flex-1 text-gray-500">White</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-gray-500">Beige</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-2" class="ml-3 min-w-0 flex-1 text-gray-500">Blue</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-3" class="ml-3 min-w-0 flex-1 text-gray-500">Brown</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-4" class="ml-3 min-w-0 flex-1 text-gray-500">Green</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-color-5" class="ml-3 min-w-0 flex-1 text-gray-500">Purple</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-t border-gray-200 px-4 py-6">
-                                <h3 class="-mx-2 -my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-1" aria-expanded="false">
-                                        <span class="font-medium text-gray-900">Category</span>
-                                        <span class="ml-6 flex items-center">
-                    <!-- Expand icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-mobile-1">
-                                    <div class="space-y-6">
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-category-0" name="category[]" value="new-arrivals" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-category-0" class="ml-3 min-w-0 flex-1 text-gray-500">New Arrivals</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-category-1" name="category[]" value="sale" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-category-1" class="ml-3 min-w-0 flex-1 text-gray-500">Sale</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-category-2" name="category[]" value="travel" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-category-2" class="ml-3 min-w-0 flex-1 text-gray-500">Travel</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-category-3" name="category[]" value="organization" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-category-3" class="ml-3 min-w-0 flex-1 text-gray-500">Organization</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-category-4" name="category[]" value="accessories" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-category-4" class="ml-3 min-w-0 flex-1 text-gray-500">Accessories</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-t border-gray-200 px-4 py-6">
-                                <h3 class="-mx-2 -my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-2" aria-expanded="false">
-                                        <span class="font-medium text-gray-900">Size</span>
-                                        <span class="ml-6 flex items-center">
-                    <!-- Expand icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-mobile-2">
-                                    <div class="space-y-6">
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-0" name="size[]" value="2l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-0" class="ml-3 min-w-0 flex-1 text-gray-500">2L</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-1" name="size[]" value="6l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-1" class="ml-3 min-w-0 flex-1 text-gray-500">6L</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-2" name="size[]" value="12l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-2" class="ml-3 min-w-0 flex-1 text-gray-500">12L</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-3" name="size[]" value="18l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-3" class="ml-3 min-w-0 flex-1 text-gray-500">18L</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-4" name="size[]" value="20l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-4" class="ml-3 min-w-0 flex-1 text-gray-500">20L</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-mobile-size-5" name="size[]" value="40l" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label for="filter-mobile-size-5" class="ml-3 min-w-0 flex-1 text-gray-500">40L</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            <section class="mb-10">
+                <AppliedFilters :filters="filters"></AppliedFilters>
+            </section>
+
+            <div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                    <HallCard
+                        v-for="hall in halls.data"
+                        :key="hall.id"
+                        :hall="hall"
+                    ></HallCard>
+
                 </div>
+
+
             </div>
 
-            <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        </div>
 
-<!--                filter navbar-->
-                <div class="flex items-baseline justify-between border-b border-gray-300 ">
-                    <h1 class="text-2xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
-
-                    <div class="flex items-center">
-                        <div class="relative inline-block text-left">
-                            <div>
-                                <button type="button" class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900" id="menu-button" aria-expanded="false" aria-haspopup="true">
-                                    Sort
-                                    <svg class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!--
-                              Dropdown menu, show/hide based on menu state.
-
-                              Entering: "transition ease-out duration-100"
-                                From: "transform opacity-0 scale-95"
-                                To: "transform opacity-100 scale-100"
-                              Leaving: "transition ease-in duration-75"
-                                From: "transform opacity-100 scale-100"
-                                To: "transform opacity-0 scale-95"
-                            -->
-<!--                            <div class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">-->
-<!--                                <div class="py-1" role="none">-->
-<!--                                    &lt;!&ndash;-->
-<!--                                      Active: "bg-gray-100", Not Active: ""-->
-
-<!--                                      Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"-->
-<!--                                    &ndash;&gt;-->
-<!--                                    <a href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Most Popular</a>-->
-<!--                                    <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Best Rating</a>-->
-<!--                                    <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">Newest</a>-->
-<!--                                    <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Price: Low to High</a>-->
-<!--                                    <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-4">Price: High to Low</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                        </div>
-
-                        <button type="button" class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-                            <span class="sr-only">View grid</span>
-                            <svg class="h-5 w-5" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M4.25 2A2.25 2.25 0 002 4.25v2.5A2.25 2.25 0 004.25 9h2.5A2.25 2.25 0 009 6.75v-2.5A2.25 2.25 0 006.75 2h-2.5zm0 9A2.25 2.25 0 002 13.25v2.5A2.25 2.25 0 004.25 18h2.5A2.25 2.25 0 009 15.75v-2.5A2.25 2.25 0 006.75 11h-2.5zm9-9A2.25 2.25 0 0011 4.25v2.5A2.25 2.25 0 0013.25 9h2.5A2.25 2.25 0 0018 6.75v-2.5A2.25 2.25 0 0015.75 2h-2.5zm0 9A2.25 2.25 0 0011 13.25v2.5A2.25 2.25 0 0013.25 18h2.5A2.25 2.25 0 0018 15.75v-2.5A2.25 2.25 0 0015.75 11h-2.5z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        <button type="button" class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden">
-                            <span class="sr-only">Filters</span>
-                            <svg class="h-5 w-5" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-
-<!--                the side bar with the content-->
-                <section aria-labelledby="products-heading" class="pb-24 pt-6 ">
-                    <h2 id="products-heading" class="sr-only">Products</h2>
-
-                    <div class="grid  gap-x-10  lg:grid-cols-4 ">
-                        <!-- Filters -->
-                        <form class="hidden lg:block  rounded-md pl-10 ">
-                            <div class="border-b border-gray-500 py-6">
-                                <h3 class="-my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-700 hover:text-black" aria-controls="filter-section-0" :aria-expanded="expanded[0]" @click="toggleSection(0)">
-                                        <span class="font-medium text-black">Categories</span>
-                                        <span class="ml-6 flex items-center">
-          <!-- Expand icon, show/hide based on section open state. -->
-          <svg v-if="!expanded[0]" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-          <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-          </svg>
-        </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0" v-show="expanded[0]">
-                                    <div class="space-y-4">
-                                        <ul role="list" class="space-y-4   border-gray-500 pb-6 text-sm font-medium text-black">
-                                            <li>
-                                                <a href="#">Totes</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Backpacks</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Travel Bags</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Hip Bags</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Laptop Sleeves</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-b border-gray-500 py-6">
-                                <h3 class="-my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-700 hover:text-black" aria-controls="filter-section-1" :aria-expanded="expanded[1]" @click="toggleSection(1)">
-                                        <span class="font-medium text-black">Price</span>
-                                        <span class="ml-6 flex items-center">
-          <!-- Expand icon, show/hide based on section open state. -->
-          <svg v-if="!expanded[1]" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-          <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-          </svg>
-        </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0" v-show="expanded[1]">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">Under $200</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">$200 to $250</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-1" class="ml-3 text-sm text-black">$250 to $300</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-2" class="ml-3 text-sm text-black">$300 to $350</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-3" class="ml-3 text-sm text-black">$400 to $450</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-4" class="ml-3 text-sm text-black">$500 to $550</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-5" class="ml-3 text-sm text-black">$600 & above</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-b border-gray-500 py-6">
-                                <h3 class="-my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-700 hover:text-black" aria-controls="filter-section-2" :aria-expanded="expanded[2]" @click="toggleSection(2)">
-                                        <span class="font-medium text-black">Type</span>
-                                        <span class="ml-6 flex items-center">
-          <!-- Expand icon, show/hide based on section open state. -->
-          <svg v-if="!expanded[2]" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-          <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-          </svg>
-        </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0" v-show="expanded[2]">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">Under $200</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">$200 to $250</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-1" class="ml-3 text-sm text-black">$250 to $300</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-2" class="ml-3 text-sm text-black">$300 to $350</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-3" class="ml-3 text-sm text-black">$400 to $450</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-4" class="ml-3 text-sm text-black">$500 to $550</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-5" class="ml-3 text-sm text-black">$600 & above</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-b border-gray-500 py-6">
-                                <h3 class="-my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-700 hover:text-black" aria-controls="filter-section-3" :aria-expanded="expanded[3]" @click="toggleSection(3)">
-                                        <span class="font-medium text-black">Size</span>
-                                        <span class="ml-6 flex items-center">
-          <!-- Expand icon, show/hide based on section open state. -->
-          <svg v-if="!expanded[3]" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-          <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-          </svg>
-        </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0" v-show="expanded[3]">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">Under $200</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">$200 to $250</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-1" class="ml-3 text-sm text-black">$250 to $300</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-2" class="ml-3 text-sm text-black">$300 to $350</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-3" class="ml-3 text-sm text-black">$400 to $450</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-4" class="ml-3 text-sm text-black">$500 to $550</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-5" class="ml-3 text-sm text-black">$600 & above</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-b border-gray-500 py-6">
-                                <h3 class="-my-3 flow-root">
-                                    <!-- Expand/collapse section button -->
-                                    <button type="button" class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-700 hover:text-black" aria-controls="filter-section-4" :aria-expanded="expanded[4]" @click="toggleSection(4)">
-                                        <span class="font-medium text-black">Suitable for</span>
-                                        <span class="ml-6 flex items-center">
-          <!-- Expand icon, show/hide based on section open state. -->
-          <svg v-if="!expanded[4]" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-                                            <!-- Collapse icon, show/hide based on section open state. -->
-          <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-          </svg>
-        </span>
-                                    </button>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0" v-show="expanded[4]">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">Under $200</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-0" class="ml-3 text-sm text-black">$200 to $250</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-1" class="ml-3 text-sm text-black">$250 to $300</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-2" class="ml-3 text-sm text-black">$300 to $350</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-3" class="ml-3 text-sm text-black">$400 to $450</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-4" class="ml-3 text-sm text-black">$500 to $550</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="filter-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-yellow-700 focus:ring-yellow-600">
-                                            <label for="filter-color-5" class="ml-3 text-sm text-black">$600 & above</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </form>
-
-                        <!-- Product grids -->
-                            <div class="flex flex-wrap min-h-screen lg:col-span-3">
-                                <Link
-                                    v-for="hall in halls.data" :key="hall.id"
-                                    :href="route('hallDetail' , {city: city , hallName: hall.name})"
-                                    class="w-full md:w-1/3 p-2">
-                                    <div class=" h-full shadow-md hover:shadow-xl rounded-lg  ">
-
-<!--                                        this is how to add the hall.image in the background?-->
-
-<!--                                        <div class="bg-gray-400 h-64 rounded-t-lg p-4 bg-no-repeat bg-center bg-cover"-->
-<!--                                             :style="{ backgroundImage: `url(${hall.image})` }">-->
-<!--                                            &lt;!&ndash; Content here &ndash;&gt;-->
-<!--                                        </div>-->
-
-                                        <div class="bg-gray-400 h-64 rounded-t-lg p-4 bg-no-repeat bg-center bg-cover" style="background-image: url(https://loremflickr.com/400/340/iceream,book)">
-                                            <div class="text-right ">
-                                                <button class="text-gray-500 hover:text-pink-500 p-1 rounded-full" style="background: white">
-                                                    <svg class="w-6 h-6" viewBox="0 0 24 24">
-                                                        <path fill="currentColor" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="flex justify-between h-full items-start px-2 pt-2">
-                                            <div class="p-2 flex-grow">
-                                                <h1 class="font-medium text-xl font-poppins">{{hall.name}}</h1>
-                                                <p class="text-gray-500 font-nunito">{{hall.description}}</p>
-                                                <p class="text-gray-500 font-nunito">Short description here</p>
-                                            </div>
-                                            <div class="p-2 text-right">
-                                                <div class="text-teal-500 font-semibold text-lg font-poppins">${{hall.price}}</div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </Link>
-                            </div>
-
-
-
-
-
-
-                    </div>
-                    <!-- Display the pagination here -->
-                    <div class="flex justify-center ">
-                        <div v-html="links"></div>
-                    </div>
-
-                </section>
-            </main>
+    </div>
+    <!-- Display the pagination here -->
+    <div class="flex justify-center p-6 mt-4  ">
+        <div v-html="links"></div>
     </div>
 
-
-
-
-
 </NavBarLayout>
+
+
+
+    <!--      footer section -->
+    <section class="bg-yellow-100">
+        <div class="mx-auto w-full px-4 py-16 sm:px-6 lg:px-1">
+            <div
+                class="flex flex-col items-center gap-4 rounded-lg bg-yellow-100 p-6  sm:flex-row sm:justify-between"
+            >
+                <strong class="text-xl text-white sm:text-xl">
+                    <!-- Logo -->
+                    <Link
+                        :href="route('homePage')"
+                        class="cursor-pointer">
+                        <h3 class="text-2xl font-medium text-blue-500">
+                            <img class="max-h-16 object-cover rounded-full"
+                                 src="https://cdn.dribbble.com/userupload/3158902/file/original-7c71bfa677e61dea61bc2acd59158d32.jpg?resize=400x0" alt="Store Logo">
+                        </h3>
+                    </Link>
+                </strong>
+
+                <a
+                    class="inline-flex items-center gap-2 rounded-full border border-white bg-amber-500 px-8 py-3  motion-safe:hover:scale-[1.02]  hover:bg-orange-400 focus:outline-none focus:ring active:bg-white/90"
+                    href="/"
+                >
+                    <span class="text-sm font-medium">Become Partner</span>
+
+                    <svg
+                        class="h-5 w-5 rtl:rotate-180"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                    </svg>
+                </a>
+            </div>
+            <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="text-center sm:text-left">
+                    <p class="text-lg font-medium text-gray-900">About Us</p>
+
+                    <nav aria-label="Footer About Nav" class="mt-8">
+                        <ul class="space-y-4 text-sm">
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Company History
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Meet the Team
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Employee Handbook
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Careers
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="text-center sm:text-left">
+                    <p class="text-lg font-medium text-gray-900">Our Services</p>
+
+                    <nav aria-label="Footer Services Nav" class="mt-8">
+                        <ul class="space-y-4 text-sm">
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Web Development
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Web Design
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Marketing
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Google Ads
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="text-center sm:text-left">
+                    <p class="text-lg font-medium text-gray-900">Resources</p>
+
+                    <nav aria-label="Footer Resources Nav" class="mt-8">
+                        <ul class="space-y-4 text-sm">
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Online Guides
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Conference Notes
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Forum
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Downloads
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Upcoming Events
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="text-center sm:text-left">
+                    <p class="text-lg font-medium text-gray-900">Helpful Links</p>
+
+                    <nav aria-label="Footer Helpful Nav" class="mt-8">
+                        <ul class="space-y-4 text-sm">
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    FAQs
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="text-gray-700 transition hover:text-gray-700/75"
+                                    href="/"
+                                >
+                                    Support
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="group flex justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
+                                    href="/"
+                                >
+
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="pt-4 bg-gray-800">
+            <ul class="flex justify-center gap-6 sm:justify-end">
+                <li>
+                    <a
+                        href="/"
+                        rel="noreferrer"
+                        target="_blank"
+                        class="text-teal-700 transition hover:text-teal-700/75"
+                    >
+                        <span class="sr-only">Facebook</span>
+                        <svg
+                            class="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="/"
+                        rel="noreferrer"
+                        target="_blank"
+                        class="text-teal-700 transition hover:text-teal-700/75"
+                    >
+                        <span class="sr-only">Instagram</span>
+                        <svg
+                            class="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="/"
+                        rel="noreferrer"
+                        target="_blank"
+                        class="text-teal-700 transition hover:text-teal-700/75"
+                    >
+                        <span class="sr-only">Twitter</span>
+                        <svg
+                            class="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"
+                            />
+                        </svg>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="/"
+                        rel="noreferrer"
+                        target="_blank"
+                        class="text-teal-700 transition hover:text-teal-700/75"
+                    >
+                        <span class="sr-only">GitHub</span>
+                        <svg
+                            class="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="/"
+                        rel="noreferrer"
+                        target="_blank"
+                        class="text-teal-700 transition hover:text-teal-700/75"
+                    >
+                        <span class="sr-only">Dribbble</span>
+                        <svg
+                            class="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-8 sm:flex sm:items-center sm:justify-between">
+                <div class="flex justify-center text-teal-600 sm:justify-start">
+
+                </div>
+
+                <p class="text-center text-sm text-gray-500 sm:mt-0 sm:text-right">
+                    Copyright &copy; 2022. All rights reserved.
+                </p>
+            </div>
+        </div>
+
+    </section>
+    <!--          end footer section-->
+
 </template>
 
 
 
 <style scoped>
-.emoji-404{
 
-    position: relative;
-    animation: mymove 2.5s infinite;
-}
-
-@keyframes mymove {
-    33%   {top: 0px;}
-    66%  {top: 20px;}
-    100%  {top: 0px}
-
-
-
-}
 </style>
