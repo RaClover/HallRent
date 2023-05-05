@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Hall;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,9 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'city' => 'Sochi',
+            'city' => 'Saint Petersburg',
             'street' =>fake()->streetAddress,
+            'hall_id' => Hall::factory(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
