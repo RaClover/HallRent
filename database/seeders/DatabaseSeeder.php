@@ -12,12 +12,13 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        User::factory(1)->has(
-            Hall::factory()->has(
-                Address::factory()->count(10)
-            )->count(1)
-        )->create();
+        $this->call([
+            UsersTableSeeder::class,
+            HallsTableSeeder::class,
+            AddressesTableSeeder::class,
+            TypesTableSeeder::class,
+        ]);
     }
 }
