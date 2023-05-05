@@ -10,10 +10,8 @@ class Address extends Model
 {
     use HasFactory;
 
-
     public function hall():BelongsTo
     {
         return $this->belongsTo(Hall::class);
     }
-
 }
