@@ -31,7 +31,9 @@ const props = defineProps({
             <div class="shadow p-4 rounded-lg bg-white">
                 <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
                     <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
-                        <div class="absolute inset-0 bg-black opacity-10"></div>
+                        <div class="absolute inset-0 bg-black ">
+                            <img src="https://pyramida.ru/upload/resize_cache/uf/948/633_473_2/948f924731cc2d550e004f76464cff79.jpg" alt="svsdfv">
+                        </div>
                     </div>
 
                     <div class="absolute flex justify-center bottom-0 mb-3">

@@ -12,15 +12,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
+
 class HomeController extends Controller
 {
     public function home()
     {
-        $address = Address::select('city', DB::raw('COUNT(halls.id) AS hallCount'))
-            ->leftJoin('halls', 'addresses.hall_id', '=', 'halls.id')
-            ->groupBy('city')
-            ->paginate(4);
-        $cities = Address::select('city')->groupBy('city')->get()->pluck('city');
+        $address = Address::has('halls')->withCount('halls')->paginate(4, ['city', 'halls_count']);
+        $cities = DB::table('addresses')->distinct()->pluck('city');
+
         return Inertia::render('Welcome', [
             'address' => $address ,
             'cities' => $cities

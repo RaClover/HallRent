@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hall_id')->unsigned();
-            $table->foreign('hall_id')->references('id')->on('halls');
             $table->string('city');
             $table->string('street');
             $table->timestamps();

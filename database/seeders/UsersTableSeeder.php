@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Hall;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,13 +15,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-//        User::create([
-//            'name' => 'John Doe',
-//            'email' => 'john@example.com',
-//            'password' => Hash::make('password'),
-//            'role' => 'admin',
-//        ]);
-
-        User::factory()->count(10)->create();
+        User::factory()->count(10)->create([
+            'role' => 'partner',
+        ]);
     }
 }

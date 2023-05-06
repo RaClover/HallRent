@@ -6,7 +6,6 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Hall extends Model
@@ -32,16 +31,16 @@ class Hall extends Model
     }
 
 
-    public function address():HasOne
-    {
-        return $this->hasOne(Address::class);
-    }
-
 
 
     public function type()
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
     }
 
     public function bookings()
@@ -85,28 +84,4 @@ class Hall extends Model
             $query->where('name', 'LIKE', "%$search%");
         });
     }
-
-//    public function scopeWithSortBy($query, $sortBy)
-//    {
-//        $query->when($sortBy, function ($query) use ($sortBy) {
-//            switch ($sortBy) {
-//                case 'price_desc':
-//                    $query->orderBy('price', 'desc');
-//                    break;
-//                case 'price_asc':
-//                    $query->orderBy('price', 'asc');
-//                    break;
-//                case 'best_selling':
-//                    $query
-//                        ->selectRaw('halls.*, SUM(quantity) as best_selling')
-//                        ->leftJoin('order_product', 'products.id', '=', 'order_product.product_id')
-//                        ->groupBy('products.id')
-//                        ->orderBy('best_selling', 'desc');
-//                    break;
-//                default:
-//                    $query->orderBy('created_at', 'desc');
-//                    break;
-//            }
-//        });
-//    }
 }

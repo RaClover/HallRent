@@ -10,8 +10,10 @@ class Address extends Model
 {
     use HasFactory;
 
-    public function hall():BelongsTo
+    protected $fillable = ['city', 'street'];
+
+    public function halls()
     {
-        return $this->belongsTo(Hall::class);
+        return $this->hasMany(Hall::class);
     }
 }

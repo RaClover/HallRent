@@ -15,21 +15,22 @@ class HallsController extends Controller
 {
     public function index(Request $request , $city)
     {
-        $halls = HallResource::collection(
-            Hall::query()
-                ->join('addresses', 'halls.id', '=', 'addresses.hall_id')
-                ->withTypes($request->type ?? '')
-                ->withMinPrice($request->min_price ?? '')
-                ->withMaxPrice($request->max_price ?? '')
-                ->withSearch($request->search ?? '')
-                ->orderBy($request->sortBy ?? 'name')
-                ->with('type')
-                ->where('addresses.city', $city)
-                ->paginate(8)
-                ->withQueryString()
-        );
+        $address = Address::where('city', $city)->first();
 
-        $types = TypeResource::collection(Type::withCount('halls')->get());
+            $halls = HallResource::collection(
+                $address->halls()
+                    ->withTypes($request->type ?? '')
+                    ->withMinPrice($request->min_price ?? '')
+                    ->withMaxPrice($request->max_price ?? '')
+                    ->withSearch($request->search ?? '')
+                    ->with('type')
+                    ->orderBy($request->sortBy ?? 'name')
+                    ->paginate(8)
+                    ->withQueryString()
+            );
+
+
+            $types = TypeResource::collection(Type::withCount('halls')->get());
         $links = $halls->links()->toHtml();
         return Inertia::render('User/Halls' , [
             'halls' => $halls ,

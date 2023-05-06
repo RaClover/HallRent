@@ -25,6 +25,8 @@ export default {
             <div
                 class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:space-y-0">
 
+
+
                 <Link
 
                     v-for="addr in address.data"
@@ -42,7 +44,7 @@ export default {
                         >
                             {{ addr.city }}
                         </h5>
-                        <h1 class="text-center text-gray-600 p-2">{{ addr.hallCount }} halls</h1>
+                        <h1 class="text-center text-gray-600 p-2">{{ addr.halls_count }} halls</h1>
                         <p class="mb-4 text-base text-black dark:text-black">
                             Some quick example text to build on the card title and make up the bulk of the card's content.
                         </p>

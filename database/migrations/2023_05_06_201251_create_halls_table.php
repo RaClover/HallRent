@@ -15,7 +15,8 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('type_id')->unsigned();
-            $table->string('name')->unique();
+            $table->integer('address_id')->unsigned();
+            $table->string('name');
             $table->string('slug');
             $table->text('description');
             $table->string('email');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->integer('size');
             $table->timestamps();
 
+            $table->foreign('address_id')->references('id')->on('addresses');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('type_id')->references('id')->on('types');
         });
@@ -37,3 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('halls');
     }
 };
+
