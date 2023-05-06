@@ -36,7 +36,7 @@ class HallsController extends Controller
             'city' => $city ,
             'links' => $links,
             'types' => $types,
-            'category' => $request->category ?? '',
+            'type' => $request->type ?? '',
             'min_price' => $request->min_price ?? '',
             'max_price' => $request->max_price ?? '',
             'sortBy' => $request->sortBy ?? '',
