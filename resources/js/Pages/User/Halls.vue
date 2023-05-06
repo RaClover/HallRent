@@ -1,7 +1,6 @@
 <script setup>
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
-import {Link} from "@inertiajs/vue3";
-import { router } from '@inertiajs/vue3'
+import {Link, router} from "@inertiajs/vue3";
 import HallSearchFilter from "@/Components/User/HallsFilters/HallSearchFilter.vue";
 import HallTypeFilter from "@/Components/User/HallsFilters/HallTypeFilter.vue";
 import HallPriceFilter from "@/Components/User/HallsFilters/HallPriceFilter.vue";
@@ -13,6 +12,7 @@ import {Inertia} from "@inertiajs/inertia";
 import SortHalls from "@/Components/User/HallsFilters/SortHalls.vue";
 import AppliedFilters from "@/Components/User/HallsFilters/AppliedFilters.vue";
 import FooterLayout from "@/Layouts/User/FooterLayout.vue";
+import Breadcrumb from "@/Components/User/Halls/Breadcrumb.vue";
 
 
 const props = defineProps({
@@ -54,8 +54,9 @@ const setSortBy = (value) => {
 }
 
 watch(filters.value, value => {
-    Inertia.get(route("halls.index",  {city: props.city}), pickBy(value), {
+    router.get(route("halls.index",  {city: props.city}), pickBy(value), {
         preserveState: true,
+        preserveScroll: true,
         replace: true,
     });
 });
@@ -74,7 +75,7 @@ watch(filters.value, value => {
                 @setSearch="setSearch"
             ></HallSearchFilter>
 
-            <HallTypeFilter
+            <HallTypeFilter scroll-region
                 :type="props.type"
                 :types="props.types"
                 @setType="setType"
@@ -90,7 +91,7 @@ watch(filters.value, value => {
         <div class="flex-1 relative pt-8 sm:px-10">
 
             <header class="flex items-center justify-between mb-10">
-                <h2 class="text-4xl uppercase font-medium">Shop</h2>
+                <Breadcrumb/>
 
                 <SortHalls
                     :sortBy="props.sortBy"
@@ -99,7 +100,10 @@ watch(filters.value, value => {
             </header>
 
             <section class="mb-10">
-                <AppliedFilters :filters="filters"></AppliedFilters>
+                <AppliedFilters
+                    :filters="filters"
+                    :city="city"
+                ></AppliedFilters>
             </section>
 
             <div>
