@@ -17,13 +17,13 @@ watch(() => search.value, debounce(function(value) {
 </script>
 
 <template>
-    <div class="pt-[34px] px-6 pb-0">
+    <div class="pt-[34px] px-3 pb-0">
         <div class="relative">
             <input
                 type="text"
                 v-model="search"
                 id="search"
-                placeholder="Search among 100+ products"
+                placeholder="Search for hall"
                 class="border border-zinc-300 p-2 pl-10 text-xs w-full placeholder-zinc-400 rounded focus:border-transparent focus:ring focus:ring-zinc-300 focus:ring-opacity-80"
             />
             <div class="absolute left-0 top-0 bg-amber-600 px-2 py-[9px] rounded-l">
