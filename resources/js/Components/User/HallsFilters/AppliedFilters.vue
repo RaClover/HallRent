@@ -3,9 +3,11 @@ import { ref, watch, onMounted } from 'vue'
 import { Inertia } from '@inertiajs/inertia';
 
 import pickBy from 'lodash/pickBy'
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    filters: Object
+    filters: Object,
+    city:String
 })
 
 const validFilters = ref({});
@@ -30,7 +32,7 @@ onMounted(() => {
     delete validFilters.value.search;
     delete validFilters.value.sortBy;
     delete validFilters.value.page;
-}),
+})
 
     watch(() => Object.keys(pickBy(props.filters)), () => {
         validFilters.value = Object.assign({}, pickBy(props.filters));
@@ -41,7 +43,7 @@ onMounted(() => {
     })
 
 const resetFilters = () => {
-    Inertia.get(route('homePage'))
+    router.get(route('halls.index' , {city: props.city}))
 }
 </script>
 
@@ -59,25 +61,25 @@ const resetFilters = () => {
 
         <div v-for="(value, filter) in validFilters" :key="filter">
 
-            <div v-if="filter === 'category'" class="flex items-center space-x-2 relative">
+            <div v-if="filter === 'type'" class="flex items-center space-x-2 relative">
                 <div
                     v-for="val in value.split(',')"
                     :key="val"
-                    class="bg-c-green-100 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
+                    class="bg-amber-300 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
                     <span>{{ val }}</span>
                     <span @click="removeFilter(filter, val)" class="absolute right-2 -bottom-[1px] text-lg cursor-pointer">&times;</span>
                 </div>
             </div>
 
             <div v-if="filter === 'min_price'" class="relative">
-                <div class="bg-c-green-100 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
+                <div class="bg-amber-300 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
                     <span>Min €{{ value }}</span>
                     <span @click="removeFilter(filter, null)" class="absolute right-2 -bottom-[1px] text-lg cursor-pointer">&times;</span>
                 </div>
             </div>
 
             <div v-if="filter === 'max_price'" class="relative">
-                <div class="bg-c-green-100 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
+                <div class=" bg-amber-300 text-c-green-600 text-xs pl-2.5 pr-6 py-1 relative flex items-center space-x-1 rounded-full max-w-max">
                     <span>Max €{{ value }}</span>
                     <span @click="removeFilter(filter, null)" class="absolute right-2 -bottom-[1px] text-lg cursor-pointer">&times;</span>
                 </div>
