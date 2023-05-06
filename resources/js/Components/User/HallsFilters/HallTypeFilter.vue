@@ -17,9 +17,9 @@ const selectType = (typeSlug) => {
     } else if (!selectedType.value.includes(typeSlug)) {
         selectedType.value += ',' + typeSlug;
     } else {
-        // the url and laravel expect a string (of one or more categories separated by a comma)
-        // To remove a category already present in the list,
-        // I first turn the string into an array, then remove the category, and finally turn it back into a string
+        // the url and laravel expect a string (of one or more types separated by a comma)
+        // To remove a type already present in the list,
+        // I first turn the string into an array, then remove the type, and finally turn it back into a string
         selectedType.value = !Array.isArray(selectedType.value) ? selectedType.value.split(',') : selectedType.value;
 
         let index = selectedType.value.indexOf(typeSlug);
@@ -49,11 +49,13 @@ watch(() => selectedType.value, () => {
                 :key="type.id"
                 @click="selectType(type.slug)"
                 class="text-xs text-zinc-800 flex items-start space-x-2 cursor-pointer px-2 py-1 rounded"
-                :class="{ 'font-medium text-zinc-900 bg-zinc-100': selectedType && selectedType.includes(type.slug) }">
+                :class="{ 'font-medium text-zinc-900 bg-zinc-100': selectedType && selectedType.includes(type.slug) }"
+            >
 
                 <div
                     class="w-4 h-4 flex justify-center items-center cursor-pointer rounded flex-none"
-                    :class="[ selectedType && selectedType.includes(type.slug) ? 'bg-c-green-600' : 'bg-zinc-300' ]">
+                    :class="[ selectedType && selectedType.includes(type.slug) ? 'bg-amber-600' : 'bg-zinc-300' ]"
+                >
 
                     <!-- Check svg -->
                     <svg
