@@ -606,7 +606,7 @@ import {Link} from "@inertiajs/vue3";
                     <div v-html="links"></div>
                 </div>
 
-            </section>
+            </section>f
         </main>
     </div>
 
