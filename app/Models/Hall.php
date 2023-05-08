@@ -84,4 +84,32 @@ class Hall extends Model
             $query->where('name', 'LIKE', "%$search%");
         });
     }
+
+
+
+    public function scopeWithSortBy($query, $sortBy)
+    {
+        $query->when($sortBy, function ($query) use ($sortBy) {
+            switch ($sortBy) {
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'best_selling':
+                    $query
+                        ->selectRaw('halls.*, SUM(quantity) as best_selling')
+                        ->leftJoin('order_product', 'products.id', '=', 'order_product.product_id')
+                        ->groupBy('products.id')
+                        ->orderBy('best_selling', 'desc');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
+        });
+    }
+
+
 }
