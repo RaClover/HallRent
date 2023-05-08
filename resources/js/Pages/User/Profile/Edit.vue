@@ -5,9 +5,8 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 import UserAuthenticatedLayout from "@/Layouts/User/UserAuthenticatedLayout.vue";
-import UserProfileSidebar from "@/Components/User/UserProfileSidebar.vue";
-import TopHeader from "@/Components/User/TopHeader.vue";
-import MiddleHeader from "@/Components/User/MiddleHeader.vue";
+import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
+import UserProfileSidebar from "@/Layouts/User/UserProfileSidebar.vue";
 
 defineProps({
     mustVerifyEmail: Boolean,
@@ -16,8 +15,11 @@ defineProps({
 </script>
 
 <template>
+
     <Head title="Profile" />
-    <UserProfileSidebar>
+
+    <NavBarLayout>
+        <UserProfileSidebar>
 <!--        <template #header>-->
 <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Profile</h2>-->
 <!--        </template>-->
@@ -41,7 +43,9 @@ defineProps({
                 </div>
             </div>
         </div>
-    </UserProfileSidebar>
+
+        </UserProfileSidebar>
+    </NavBarLayout>
 </template>
 
 <style scoped>
