@@ -5,6 +5,7 @@ import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
     hall: Object,
+    city: String
 });
 
 // const inWhishlist = (id) => {
@@ -15,7 +16,7 @@ const props = defineProps({
 //     Inertia.post(route("whishlist.toggle", { id: props.product.id }));
 // };
 
-// const productImage = () => {
+// const hallImage = () => {
 //     let preview = props.hall.images.find(image => {
 //         return image.is_preview;
 //     });
@@ -26,8 +27,10 @@ const props = defineProps({
 
 <template>
 
+
+
     <div class="relative mx-auto w-full">
-        <a href="#" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+        <Link :href="route('hallDetail', { city: city, hall: hall })" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
             <div class="shadow p-4 rounded-lg bg-white">
                 <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
                     <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
@@ -124,7 +127,7 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-        </a>
+        </Link>
     </div>
 
 
