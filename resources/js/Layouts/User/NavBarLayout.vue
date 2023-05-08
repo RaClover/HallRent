@@ -6,7 +6,11 @@ import {Link} from "@inertiajs/vue3";
 import DropdownLink from "@/Components/DropdownLink.vue";
 
 export default defineComponent({
-    components: {DropdownLink, Link, Dropdown}
+    components: {
+        DropdownLink,
+        Link,
+        Dropdown
+    }
 })
 </script>
 <template>

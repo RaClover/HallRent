@@ -25,7 +25,7 @@ use App\Http\Controllers\User\HallsController;
 Route::get('/', [HomeController::class, 'home'])->name('homePage');
 Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
 Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
-Route::get('/{city}/hall/{hallName}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
+Route::get('{city}/halls/{hall}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
 
 
 
@@ -76,11 +76,11 @@ Route::get('/{city}/hall/{hallName}' , [HallsController::class , 'hallDetail'])-
             Route::get('/profile', [UserProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [UserProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [UserProfileController::class, 'destroy'])->name('profile.destroy');
-            Route::get('orders' , [UserProfileController::class , 'orders'])->name('orders');
-            Route::get('wishlists' , [UserProfileController::class , 'wishlists'])->name('wishlists');
-            Route::get('messages' , [UserProfileController::class , 'messages'])->name('messages');
+            Route::get('documents' , [UserProfileController::class , 'documents'])->name('documents');
             Route::get('notifications' , [UserProfileController::class , 'notifications'])->name('notifications');
-            Route::get('settings' , [UserProfileController::class , 'settings'])->name('settings');
+            Route::get('messages' , [UserProfileController::class , 'messages'])->name('messages');
+            Route::get('bookings' , [UserProfileController::class , 'bookings'])->name('bookings');
+            Route::get('wishlists' , [UserProfileController::class , 'wishlists'])->name('wishlists');
             Route::inertia('/dashboard', 'User/UserDashboard')->name('dashboard');
         });
 

@@ -112,6 +112,7 @@ watch(filters.value, value => {
                         v-for="hall in halls.data"
                         :key="hall.id"
                         :hall="hall"
+                        :city="city"
                     ></HallCard>
 
                 </div>

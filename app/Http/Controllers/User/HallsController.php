@@ -24,7 +24,7 @@ class HallsController extends Controller
                     ->withMaxPrice($request->max_price ?? '')
                     ->withSearch($request->search ?? '')
                     ->with('type')
-                    ->orderBy($request->sortBy ?? 'name')
+                    ->withSortBy($request->sortBy ?? '')
                     ->paginate(8)
                     ->withQueryString()
             );
@@ -54,9 +54,11 @@ class HallsController extends Controller
 
 
 
-    public function hallDetail()
+    public function hallDetail( $city  , Hall $hall)
     {
-        return Inertia::render('User/HallDetail');
+        return Inertia::render('User/HallDetail' , [
+            'hall' => $hall
+        ]);
     }
 
 
