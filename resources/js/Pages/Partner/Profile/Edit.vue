@@ -15,7 +15,7 @@ defineProps({
 <template>
     <Head title="Profile" />
 
-    <PartnerAuthenticatedLayout />
+    <PartnerAuthenticatedLayout>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -36,6 +36,7 @@ defineProps({
                 </div>
             </div>
         </div>
+    </PartnerAuthenticatedLayout>
 </template>
 
 <style scoped>
