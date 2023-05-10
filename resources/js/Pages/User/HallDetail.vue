@@ -1,31 +1,45 @@
 <script>
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/User/Halls/Breadcrumb.vue";
 import FooterLayout from "@/Layouts/User/FooterLayout.vue";
 import Description from "@/Components/User/HallDetailParts/Description.vue";
 import Reviews from "@/Components/User/HallDetailParts/Reviews.vue";
+import {ref} from "vue";
+import VueTailwindDatepicker from 'vue-tailwind-datepicker';
+import AvailabilityModal from "@/Components/User/HallDetailParts/AvailabilityModal.vue";
 
 export default {
     name: "HallDetail",
+    methods: {
+        router() {
+            return router
+        }
+    },
     components: {
+        AvailabilityModal,
         Reviews,
         Description,
         FooterLayout,
         Breadcrumb,
         NavBarLayout,
-        Link
+        Link,
+        ref,
+        VueTailwindDatepicker
     },
 
+
     props: {
-        hall: Object
+        hall: Object,
+        user: Object
     } ,
 
     data() {
         return {
             activeTab: 'description',
+            showModal: false
         }
-    }
+    },
 }
 </script>
 
@@ -122,20 +136,21 @@ export default {
                         <div class="w-full py-14 md:w-1/2 right-0 ">
                             <div class="lg:pl-20">
 
-                                <div
-                                    class="flex items-center justify-center mb-5 gap-x-10 bg-gray-200 p-1 pr-32 rounded-2xl">
+                                <Link
+                                    :href="route('userPortfolio' , {user: user})"
+                                    class="flex items-center justify-center mb-5 gap-x-10 bg-gray-200  pr-64 rounded-2xl motion-safe:hover:scale-[1.01]">
                                     <div class="relative w-24 h-24 rounded-full">
 
                                         <img
-                                            class="object-cover w-full h-full rounded-full"
+                                            class="object-cover w-20 h-20 mt-2 rounded-full"
                                             src="https://i.postimg.cc/KvrSzTxg/alexandru-zdrobau-dj-RG1v-B1pw-unsplash.jpg"
                                             alt="">
                                     </div>
                                     <div class="info">
                                         <h2 class="text-lg font-bold text-black dark:text-black">
-                                            Alexander Waters
+                                          {{user.name}}
                                         </h2>
-                                        <span class="flex mt-2 text-orange-500 gap-x-0.5">
+                                        <span class="flex mt-2 text-orange-500 gap-x-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                                          class="bi bi-star-fill" viewBox="0 0 16 16">
                                         <path
@@ -163,7 +178,7 @@ export default {
                                     </svg>
                                 </span>
                                     </div>
-                                </div>
+                                </Link>
 
 
                                 <div class="mt-6">
@@ -194,24 +209,25 @@ export default {
                                 </div>
                                 <div class="mt-6 ">
                                     <div class="flex flex-wrap items-center">
-<span class="mr-2">
- <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-    <path
-        d="M16.25 2.5h-1.88V.63h-1.25v1.87H6.88V.63H5.63v1.87H3.75a1.88 1.88 0 0 0-1.88 1.88v12.5a1.88 1.88 0 0 0 1.88 1.88h12.5a1.88 1.88 0 0 0 1.88-1.88V4.38a1.88 1.88 0 0 0-1.88-1.88zm.63 14.38a.63.63 0 0 1-.63.63H3.75a.63.63 0 0 1-.63-.63V7.5h14.38z"/>
-  </svg>
-</span>
+                                        <span class="mr-2">
+                                            <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M16.25 2.5h-1.88V.63h-1.25v1.87H6.88V.63H5.63v1.87H3.75a1.88 1.88 0 0 0-1.88 1.88v12.5a1.88 1.88 0 0 0 1.88 1.88h12.5a1.88 1.88 0 0 0 1.88-1.88V4.38a1.88 1.88 0 0 0-1.88-1.88zm.63 14.38a.63.63 0 0 1-.63.63H3.75a.63.63 0 0 1-.63-.63V7.5h14.38z"/>
+                                            </svg>
+                                        </span>
                                         <h2 class="text-lg font-bold text-gray-700 dark:text-black">Availability</h2>
                                     </div>
                                     <div class="px-7">
-                                        <a class="mb-2 text-sm text-blue-400 dark:text-blue-400" href="#">Check
-                                            Availability</a>
+
+                                        <AvailabilityModal />
                                     </div>
                                 </div>
                                 <div class="mt-6 ">
-                                    <button
+                                    <Link
+                                        :href="route('booking.contact')"
+                                        as="button"
                                         class="w-full px-4 py-2 font-bold text-white bg-amber-600 lg:w-96 hover:bg-amber-600">
-                                        Contact Owner
-                                    </button>
+                                        Contact {{ user.name}}
+                                    </Link>
                                 </div>
                                 <div class="flex items-center mt-6 ">
                                     <div>

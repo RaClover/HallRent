@@ -6,6 +6,8 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Hall extends Model
@@ -48,6 +50,12 @@ class Hall extends Model
         return $this->belongsToMany(Booking::class, 'booking_hall')
             ->withPivot(['quantity', 'unit_price'])
             ->withTimestamps();
+    }
+
+
+    public function images():HasMany
+    {
+        return $this->hasMany(HallImage::class);
     }
 
 

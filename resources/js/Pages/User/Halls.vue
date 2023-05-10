@@ -19,13 +19,13 @@ const props = defineProps({
     halls: Array ,
     types: Array,
     city: String ,
-    links: String,
     type: String,
     search: String,
     min_price: String,
     max_price: String,
     sortBy: String,
 });
+
 
 
 const filters = ref({
@@ -64,6 +64,7 @@ watch(filters.value, value => {
 
 
 </script>
+
 
 <template>
 <NavBarLayout>
@@ -118,15 +119,23 @@ watch(filters.value, value => {
                 </div>
 
 
+
             </div>
 
         </div>
 
     </div>
+
+
+    <Pagination
+        v-if="halls.links.next || halls.links.prev"
+        :links="halls.meta.links"
+        :meta="halls.links"
+    ></Pagination>
     <!-- Display the pagination here -->
-    <div class="flex justify-center p-6 mt-4  ">
-        <div v-html="links"></div>
-    </div>
+<!--    <div class="flex justify-center p-6 mt-4  ">-->
+<!--        <div v-html="links"></div>-->
+<!--    </div>-->
 
 </NavBarLayout>
 

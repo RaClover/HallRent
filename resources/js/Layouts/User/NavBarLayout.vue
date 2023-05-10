@@ -139,7 +139,23 @@ export default defineComponent({
                         </template>
 
                         <template #content>
-                            <DropdownLink :href="route('my.profile.edit')"> Profile </DropdownLink>
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'user'"
+                                :href="route('my.profile.edit')">
+                                Profile
+                            </DropdownLink>
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'partner'"
+                                :href="route('partner.dashboard')">
+                                Profile
+                            </DropdownLink>
+
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'admin'"
+                                :href="route('admin.dashboard')">
+                                Profile
+                            </DropdownLink>
+
                             <DropdownLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </DropdownLink>
