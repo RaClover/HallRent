@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\RedirectAuthenticatedUsersController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\HallsController;
+use App\Http\Controllers\User\BookingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,6 +27,7 @@ Route::get('/', [HomeController::class, 'home'])->name('homePage');
 Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
 Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
 Route::get('{city}/halls/{hall}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
+Route::get('/users/show/{user}' , [HallsController::class , 'userPortfolio'])->name('userPortfolio');
 
 
 
@@ -85,6 +87,12 @@ Route::get('{city}/halls/{hall}' , [HallsController::class , 'hallDetail'])->nam
         });
 
 
+
+
+        // bookings routes
+        Route::prefix('booking')->name('booking.')->middleware(['checkRole:user,partner', 'verified'])->group(function () {
+            Route::get('/contact' , [BookingController::class , 'contact'])->name('contact');
+        });
 
 
     });
