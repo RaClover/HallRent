@@ -23,19 +23,17 @@ class HallsController extends Controller
                     ->withMinPrice($request->min_price ?? '')
                     ->withMaxPrice($request->max_price ?? '')
                     ->withSearch($request->search ?? '')
-                    ->with('type')
+                    ->with('type' , 'user')
                     ->withSortBy($request->sortBy ?? '')
                     ->paginate(8)
                     ->withQueryString()
             );
 
-
             $types = TypeResource::collection(Type::withCount('halls')->get());
-        $links = $halls->links()->toHtml();
+
         return Inertia::render('User/Halls' , [
             'halls' => $halls ,
             'city' => $city ,
-            'links' => $links,
             'types' => $types,
             'type' => $request->type ?? '',
             'min_price' => $request->min_price ?? '',
@@ -56,9 +54,19 @@ class HallsController extends Controller
 
     public function hallDetail( $city  , Hall $hall)
     {
+
+        $user = $hall->user;
         return Inertia::render('User/HallDetail' , [
-            'hall' => $hall
+            'hall' => $hall ,
+            'user' => $user
         ]);
+    }
+
+
+    public function userPortfolio()
+    {
+
+        return Inertia::render('User/UserPortfolio');
     }
 
 
