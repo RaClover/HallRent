@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('hall_images', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hall_id')->unsigned();
-            $table->foreign('hall_id')->references('id')->on('halls');
-            $table->string('path')->nullable();
+            $table->foreign('hall_id')->references('id')->on('halls')->onDelete('cascade');
+            $table->text('img')->nullable();
             $table->timestamps();
 
         });
