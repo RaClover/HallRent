@@ -24,6 +24,7 @@
         "jquery": "^3.6.4",
         "lodash": "^4.17.21",
         "nprogress": "^0.2.0",
+        "vue-tailwind-datepicker": "^1.4.4",
         "vue2-daterange-picker": "^0.6.8"
     }
 }
