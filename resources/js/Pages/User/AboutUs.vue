@@ -10,7 +10,7 @@ export default {
 
 <template>
 <NavBarLayout>
-    <h1>This is about us page</h1>
+<p>this is about page</p>
 </NavBarLayout>
 </template>
 

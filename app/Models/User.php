@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -51,6 +52,12 @@ class User extends Authenticatable
     public function halls():HasMany
     {
         return $this->hasMany(Hall::class);
+    }
+
+
+    public function contacts():HasMany
+    {
+        return $this->hasMany(Contact::class);
     }
 
 

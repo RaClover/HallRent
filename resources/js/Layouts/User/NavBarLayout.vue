@@ -34,7 +34,7 @@ export default defineComponent({
             </div>
 
             <!-- Links Section -->
-            <div class="items-center hidden space-x-8 lg:flex">
+            <div class="items-center hidden space-x-32 lg:flex">
                 <Link
                     :href="route('homePage')"
                     class="flex text-gray-600 hover:text-blue-500
@@ -42,33 +42,20 @@ export default defineComponent({
                     Home
                 </Link>
 
-                <Link
-                    class="flex text-gray-600
-                    cursor-pointer transition-colors duration-300
-                    font-semibold text-blue-600">
-                    Themes
-                </Link>
 
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Developers
-                </Link>
-
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Pricing
-                </Link>
-
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Blog
-                </Link>
 
                 <Link
                     :href="route('aboutUs')"
                     class="flex text-gray-600 hover:text-blue-500
                     cursor-pointer transition-colors duration-300">
                     About Us
+                </Link>
+
+                <Link
+                    :href="route('contactUs.create')"
+                    class="flex text-gray-600 hover:text-blue-500
+                    cursor-pointer transition-colors duration-300">
+                    Contact Us
                 </Link>
             </div>
 

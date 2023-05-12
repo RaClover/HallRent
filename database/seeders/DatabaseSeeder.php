@@ -18,16 +18,16 @@ class DatabaseSeeder extends Seeder
 //        $this->call(UsersTableSeeder::class);
 //        $this->call(AddressesTableSeeder::class);
 //        $this->call(HallsTableSeeder::class);
-        $this->call(HallImagesTableSeeder::class);
+//        $this->call(HallImagesTableSeeder::class);
 
 
 
 
 //        to run the HallsTableSeeder 40 more times
-
-//        for ($i = 0; $i < 40; $i++) {
-//            $this->call(HallsTableSeeder::class);
-//        }
+//
+        for ($i = 0; $i < 40; $i++) {
+            $this->call(HallsTableSeeder::class);
+        }
 
 
     }
