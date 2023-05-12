@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\RedirectAuthenticatedUsersController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\HallsController;
 use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\ContactUsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +26,7 @@ use App\Http\Controllers\User\BookingController;
 */
 Route::get('/', [HomeController::class, 'home'])->name('homePage');
 Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
+Route::get('/contactUs' , [HomeController::class , 'contactUs'])->name('contactUs');
 Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
 Route::get('{city}/halls/{hall}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
 Route::get('/users/show/{user}' , [HallsController::class , 'userPortfolio'])->name('userPortfolio');
@@ -33,9 +35,19 @@ Route::get('/users/show/{user}' , [HallsController::class , 'userPortfolio'])->n
 
 
 
+//routes for the contact us page
+Route::prefix('contactUs')->middleware('auth')->name('contactUs.')->group(function () {
+    Route::get('/create', [ContactUsController::class , 'create'])->name('create');
+    Route::post('/store' , [ContactUsController::class , 'store'])->name('store');
+});
+
+
+
+
     Route::group(['middleware' => 'auth'], function() {
         Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
-        Route::get("/redirectAuthenticatedUsers", [RedirectAuthenticatedUsersController::class, "home"]);
+        Route::get("/redirectAuthenticatedUsers", [RedirectAuthenticatedUsersController::class, "home"])
+            ->middleware('auth' , 'verified');
 
 
 
