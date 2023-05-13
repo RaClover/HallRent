@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HallImageResource;
 use App\Models\Address;
 use App\Models\Hall;
 use App\Models\Type;
@@ -23,7 +24,7 @@ class HallsController extends Controller
                     ->withMinPrice($request->min_price ?? '')
                     ->withMaxPrice($request->max_price ?? '')
                     ->withSearch($request->search ?? '')
-                    ->with('type' , 'user')
+                    ->with('type' , 'user' , 'images')
                     ->withSortBy($request->sortBy ?? '')
                     ->paginate(8)
                     ->withQueryString()
@@ -56,9 +57,13 @@ class HallsController extends Controller
     {
 
         $user = $hall->user;
+//        $images = HallImageResource::collection($hall->images);
+        $images = $hall->images()->get();
+
         return Inertia::render('User/HallDetail' , [
             'hall' => $hall ,
-            'user' => $user
+            'user' => $user,
+            'images' => $images->toArray()
         ]);
     }
 
