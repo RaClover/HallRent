@@ -63,6 +63,33 @@ export default defineComponent({
 
             <!-- Icon Menu Section -->
             <div v-if="!this.$page.props.auth.user" class="flex items-center space-x-5">
+
+
+
+                <Link
+                    class="inline-flex items-center gap-2 rounded-md border border-white bg-gray-200 px-4 py-3  motion-safe:hover:scale-[1.02]  hover:bg-gray-300  active:bg-white/90"
+                    :href="route('becomePartner')"
+                    preserve-scroll
+                    scroll-region
+                >
+                    <span class="text-sm font-medium">Become Partner</span>
+
+                    <svg
+                        class="h-5 w-5 rtl:rotate-180"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                    </svg>
+                </Link>
+
                 <!-- Register -->
                 <Link
                     :href="route('register')"

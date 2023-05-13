@@ -23,9 +23,9 @@ import {Link} from "@inertiajs/vue3";
                     </Link>
                 </strong>
 
-                <a
+                <Link
                     class="inline-flex items-center gap-2 rounded-full border border-white bg-amber-500 px-8 py-3  motion-safe:hover:scale-[1.02]  hover:bg-orange-400 focus:outline-none focus:ring active:bg-white/90"
-                    href="/"
+                    :href="route('becomePartner')"
                 >
                     <span class="text-sm font-medium">Become Partner</span>
 
@@ -43,7 +43,7 @@ import {Link} from "@inertiajs/vue3";
                             d="M17 8l4 4m0 0l-4 4m4-4H3"
                         />
                     </svg>
-                </a>
+                </Link>
             </div>
             <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="text-center sm:text-left">
