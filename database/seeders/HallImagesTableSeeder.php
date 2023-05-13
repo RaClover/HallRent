@@ -14,18 +14,12 @@ class HallImagesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Hall::chunk(100, function ($halls) {
-            $hallImages = [];
-
-            foreach ($halls as $hall) {
-                $images = HallImage::factory()->count(1)->make([
-                    'hall_id' => $hall->id,
-                ])->toArray();
-
-                $hallImages = array_merge($hallImages, $images);
-            }
-
-            HallImage::insert($hallImages);
-        });
+        $halls = Hall::all();
+        foreach ($halls as $hall) {
+            HallImage::factory()->count(1)->create([
+                'hall_id' => $hall->id,
+                'img' => 'https://picsum.photos/800/600?random=' . rand(1, 1000),
+            ]);
+        }
     }
 }
