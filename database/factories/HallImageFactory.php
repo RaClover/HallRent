@@ -23,15 +23,10 @@ class HallImageFactory extends Factory
      */
     public function definition(): array
     {
-        $hallIds = Hall::pluck('id')->toArray();
-        $hallId = $this->faker->randomElement($hallIds);
-        $imagePath = UploadedFile::fake()->image('hall_image.jpg');
-        $filename = Str::random(40) . '.' . $imagePath->getClientOriginalExtension();
-        Storage::disk('public')->putFileAs('hall_images', $imagePath, $filename);
-
+        $image = UploadedFile::fake()->image('hall-image.jpg');
+        $path = Storage::putFile('public/hall-images', $image);
         return [
-            'hall_id' => $hallId,
-            'img' => 'hall_images/' . $filename,
+            'img' => Storage::url($path),
         ];
     }
 }
