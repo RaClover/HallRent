@@ -8,15 +8,13 @@ import Reviews from "@/Components/User/HallDetailParts/Reviews.vue";
 import {ref} from "vue";
 import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 import AvailabilityModal from "@/Components/User/HallDetailParts/AvailabilityModal.vue";
+import GallaryModal from "@/Components/User/HallDetailParts/GallaryModal.vue";
 
 export default {
     name: "HallDetail",
-    methods: {
-        router() {
-            return router
-        }
-    },
+
     components: {
+        GallaryModal,
         AvailabilityModal,
         Reviews,
         Description,
@@ -31,15 +29,48 @@ export default {
 
     props: {
         hall: Object,
-        user: Object
+        user: Object,
+        images: Array
     } ,
 
     data() {
         return {
             activeTab: 'description',
-            showModal: false
+            showModal: false,
+            currentImageIndex: 0,
         }
     },
+    computed: {
+        currentImage() {
+            if (this.images && this.images.length > 0) {
+                return this.images[this.currentImageIndex];
+            }
+            return null;
+        },
+    },
+
+    methods: {
+        router() {
+            return router
+        },
+
+        nextImage() {
+            if (this.images && this.currentImageIndex < this.images.length - 1) {
+                this.currentImageIndex++;
+            }
+        },
+        prevImage() {
+            if (this.images && this.currentImageIndex > 0) {
+                this.currentImageIndex--;
+            }
+        },
+        openGallery(index) {
+            this.currentImageIndex = index;
+            this.showModal = true;
+        },
+
+    },
+
 }
 </script>
 
@@ -54,9 +85,13 @@ export default {
                     <div class="flex flex-wrap">
                         <div class="w-full   mb-8 md:w-1/2 md:mb-0 left-0 ">
                             <div class="relative mb-6 mt-10">
-                                <a class="absolute left-0 transform lg:ml-2 top-1/2 translate-1/2" href="#">
+                                <a
+                                    class="absolute left-0   transform lg:ml-2 top-1/3 translate-1/2"
+                                    href="#"
+                                    @click.prevent="prevImage"
+                                >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="w-5 h-5 mt-4 text-blue-600 bi bi-chevron-left dark:text-blue-800"
+                                         class="w-10 h-20 mt-4 text-blue-600 bi bi-chevron-left dark:text-amber-400 hover:text-amber-700"
                                          viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
                                               d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"></path>
@@ -64,12 +99,18 @@ export default {
                                 </a>
 
                                 <img
+                                    @click.prevent="openGallery(currentImageIndex)"
+                                    v-if="currentImage"
                                     class="object-cover border border-gray-500 rounded-md w-full"
-                                    src="https://i.postimg.cc/prW7DGkK/R-14.png"
+                                    :src="currentImage.img"
                                     alt="">
-                                <a class="absolute right-0 transform lg:mr-2 top-1/2 translate-1/2" href="#">
+                                <a
+                                    class="absolute  right-0 transform lg:mr-2 top-1/3 translate-1/2"
+                                    href="#"
+                                    @click.prevent="nextImage"
+                                >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="w-5 h-5 mb-10 text-blue-500 bi bi-chevron-right dark:text-blue-800"
+                                         class="w-10 h-20 mb-10 text-amber-500 bi bi-chevron-right dark:text-amber-400 hover:text-amber-700 "
                                          viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
                                               d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"></path>
@@ -77,42 +118,33 @@ export default {
                                 </a>
 
 
-                                <div class="flex-wrap md:flex  mt-4">
-                                    <div class="w-1/2 p-2 sm:w-1/4">
-                                        <a class="block border border-transparent " href="#">
-                                            <img
-                                                class="object-cover w-full lg:h-32 border border-gray-500 rounded-md"
-                                                src="https://i.postimg.cc/prW7DGkK/R-14.png"
-                                                alt="">
-                                        </a>
-                                    </div>
-                                    <div class="w-1/2 p-2 sm:w-1/4">
-                                        <a class="block border border-transparent" href="#">
-                                            <img
-                                                class="object-cover w-full lg:h-32 border border-gray-500 rounded-md"
-                                                src="https://i.postimg.cc/prW7DGkK/R-14.png"
-                                                alt="">
-                                        </a>
-                                    </div>
-                                    <div class="w-1/2 p-2 sm:w-1/4">
-                                        <a class="block border border-transparent " href="#">
-                                            <img
-                                                class="object-cover w-full lg:h-32 border border-gray-500 rounded-md"
-                                                src="https://i.postimg.cc/prW7DGkK/R-14.png"
-                                                alt="">
-                                        </a>
-                                    </div>
-                                    <div class="w-1/2 p-2 sm:w-1/4">
-                                        <a class="block border border-transparent" href="#">
-                                            <img
-                                                class="object-cover w-full lg:h-32 border border-gray-500 rounded-md"
-                                                src="https://i.postimg.cc/prW7DGkK/R-14.png "
-                                                alt="">
-                                        </a>
-                                    </div>
+                                <div class="flex-wrap md:flex mt-4">
+                                    <template v-for="(image, index) in images">
+                                        <div v-if="index < 3" class="w-1/2 p-2 sm:w-1/4">
+                                            <a
+                                                class="block border border-transparent"
+                                                href="#"
+                                                @click.prevent="currentImageIndex = index"
+                                            >
+                                                <img class="object-cover w-full lg:h-32 border border-gray-500 rounded-md" :src="image.img" alt="">
+                                            </a>
+                                        </div>
+                                        <div v-else-if="index === 3" class="w-1/2 p-2 sm:w-1/4 relative">
+                                            <a
+                                                @click.prevent="openGallery(index)"
+                                                class="block border border-transparent"
+                                                href="#"
+                                            >
+                                                <img class="object-cover w-full lg:h-32 border border-gray-500 rounded-md opacity-50" :src="image.img" alt="">
+                                                <div class="absolute inset-0 flex items-center justify-center text-gray-700 font-bold">
+                                                    {{ images.length - 3 }} more images
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </template>
                                 </div>
-
                             </div>
+                            <GallaryModal :show="showModal" :images="images" :currentImageIndex="currentImageIndex" @close="showModal = false" />
                             <div class="px-6 pb-6 mt-6 border-t border-gray-300 dark:border-gray-400 ">
                                 <div class="flex items-center justify-center mt-6">
 <span class="mr-3">
