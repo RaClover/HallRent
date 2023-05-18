@@ -11,7 +11,24 @@ export default {
             type: Array,
             required: true
         },
-    }
+        cityImages: {
+            type: Array,
+            required: true
+        },
+    },
+
+
+    methods: {
+        getCityImage(city) {
+            // Logic to get the city image based on the city name
+            // You can access the cityImages array passed from the Welcome.vue component
+            // and retrieve the image URL based on the city name
+
+            // Assuming cityImages is an array of objects with city names as keys and image URLs as values
+            const cityImages = this.$props.cityImages;
+            return cityImages[city] || "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"; // Default image URL if city image is not available
+        },
+    },
 }
 </script>
 
@@ -34,8 +51,8 @@ export default {
                     class="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-50 transform transition duration-300 hover:scale-105"
                 >
                         <img
-                            class="rounded-t-lg"
-                            src="https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"
+                            class="rounded-t-lg h-60 w-full"
+                            :src="getCityImage(addr.city)"
                             alt=""
                         />
                     <div class="p-6">
