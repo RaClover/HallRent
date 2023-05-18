@@ -6,6 +6,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
@@ -25,40 +26,34 @@ class Hall extends Model
         'user_id',
         'address_id'
     ];
-
-
     public function user():BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-
-
-
-    public function type()
+    public function type():BelongsTo
     {
         return $this->belongsTo(Type::class);
     }
 
-    public function address()
+    public function address():BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function bookings()
+    public function bookings():BelongsToMany
     {
         return $this->belongsToMany(Booking::class, 'booking_hall')
             ->withPivot(['quantity', 'unit_price'])
             ->withTimestamps();
     }
-
-
     public function images():HasMany
     {
         return $this->hasMany(HallImage::class);
     }
-
-
+    public function wishlists():BelongsToMany
+    {
+        return $this->belongsToMany(Whishlist::class ,  'whishlists');
+    }
     public function scopeWithTypes($query, $typeSlugs)
     {
         $query->when($typeSlugs, function ($query) use ($typeSlugs) {
@@ -71,7 +66,6 @@ class Hall extends Model
             });
         });
     }
-
     public function scopeWithMinPrice($query, $min_price)
     {
         $query->when($min_price, function ($query) use ($min_price) {
@@ -85,16 +79,12 @@ class Hall extends Model
             $query->where('price', '<=', $max_price);
         });
     }
-
     public function scopeWithSearch($query, $search)
     {
         $query->when($search, function ($query) use ($search) {
             $query->where('name', 'LIKE', "%$search%");
         });
     }
-
-
-
     public function scopeWithSortBy($query, $sortBy)
     {
         $query->when($sortBy, function ($query) use ($sortBy) {
@@ -118,6 +108,4 @@ class Hall extends Model
             }
         });
     }
-
-
 }
