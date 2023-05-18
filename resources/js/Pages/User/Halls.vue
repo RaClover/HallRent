@@ -1,6 +1,6 @@
 <script setup>
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
-import {Link, router} from "@inertiajs/vue3";
+import {Link, router, usePage} from "@inertiajs/vue3";
 import HallSearchFilter from "@/Components/User/HallsFilters/HallSearchFilter.vue";
 import HallTypeFilter from "@/Components/User/HallsFilters/HallTypeFilter.vue";
 import HallPriceFilter from "@/Components/User/HallsFilters/HallPriceFilter.vue";

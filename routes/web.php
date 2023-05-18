@@ -14,6 +14,7 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\HallsController;
 use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\User\ContactUsController;
+use App\Http\Controllers\User\WhishlistController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,6 +41,13 @@ Route::prefix('contactUs')->middleware('auth')->name('contactUs.')->group(functi
     Route::get('/create', [ContactUsController::class , 'create'])->name('create');
     Route::post('/store' , [ContactUsController::class , 'store'])->name('store');
 });
+
+
+// WHISHLIST
+Route::get('/whishlist', [WhishlistController::class, 'index'])->name('whishlist.index');
+Route::post('/whishlist/{hall}', [WhishlistController::class, 'toggle'])->name('whishlist.toggle');
+Route::post('/whishlist/{hall}/move-to-cart', [WhishlistController::class, 'moveToCart'])->name('whishlist.moveToCart');
+Route::delete('/whishlist', [WhishlistController::class, 'destroy'])->name('whishlist.destroy');
 
 
 

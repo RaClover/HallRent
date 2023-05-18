@@ -39,7 +39,11 @@ export default {
         cities: {
             type: Array,
             required: true
-        }
+        },
+        cityImages: {
+            type : Array ,
+            required : true
+        },
     },
     setup() {
         const { route } = usePage();
@@ -84,7 +88,7 @@ export default {
     </section>
 
 
-   <CityCards :address="address"/>
+   <CityCards :address="address" :cityImages="cityImages"/>
 
 <!--    Why us section -->
     <section>

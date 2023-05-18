@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,18 +48,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-
     public function halls():HasMany
     {
         return $this->hasMany(Hall::class);
     }
-
-
     public function contacts():HasMany
     {
         return $this->hasMany(Contact::class);
     }
 
+    public function whishlist():BelongsToMany
+    {
+        return $this->belongsToMany(Hall::class, 'whishlists')
+            ->withTimestamps()
+            ->using(Whishlist::class);
+    }
 
 }

@@ -2,35 +2,51 @@
 import { Inertia } from "@inertiajs/inertia";
 import {usePage} from '@inertiajs/inertia-vue3'
 import {Link} from "@inertiajs/vue3";
+import ForgotPassword from "@/Pages/Auth/ForgotPassword.vue";
+import {computed, watch} from "vue";
 
 const props = defineProps({
     hall: Object,
-    city: String
+    city: String,
 });
 
-// const inWhishlist = (id) => {
-//     return usePage().props.value.whishlist.find(product => { return product.id === id }) ? true : false;
-// }
-//
-// const toggleWhishlist = () => {
-//     Inertia.post(route("whishlist.toggle", { id: props.product.id }));
-// };
+const page = usePage()
 
-// const hallImage = () => {
-//     let preview = props.hall.images.find(image => {
-//         return image.is_preview;
+
+// const inWhishlist = (id) => {
+//     return !!page.props.value.whishlist.find(hall => {
+//         return hall.id === id
 //     });
-//
-//     return '/images/' + preview.url;
 // }
+
+// const inWhishlist = (id) => {
+//     return page.props.value.whishlist && !!page.props.value.whishlist.find(hall => {
+//         return hall.id === id
+//     });
+// }
+
+
+const inWhishlist = (id) => {
+    return page.props.whishlist && page.props.whishlist.some(item => {
+        return item.id === id;
+    });
+}
+
+const toggleWhishlist = () => {
+    Inertia.post(route("whishlist.toggle", { hall: props.hall }));
+};
+
+
 </script>
 
 <template>
 
-
+<!--    :href="route('hallDetail', { city: city, hall: hall })"-->
 
     <div class="relative mx-auto w-full">
-        <Link :href="route('hallDetail', { city: city, hall: hall })" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+        <Link
+            :href="route('hallDetail', { city: city, hall: hall })"
+            class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
             <div class="shadow p-4 rounded-lg bg-white">
                 <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
                     <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
@@ -58,13 +74,28 @@ const props = defineProps({
                         </div>
                     </div>
 
-                    <span class="absolute top-0 left-0 inline-flex mt-3 ml-3 px-3 py-2 rounded-lg z-10  text-sm font-medium text-white select-none">
-                         <button class="text-gray-500 hover:text-pink-500 p-1 rounded-full" style="background: white">
-                                            <svg class="w-6 h-6" viewBox="0 0 24 24">
-                                                <path fill="currentColor" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
-                                            </svg>
-                                        </button>
-		  </span>
+
+                    <div v-if="this.$page.props.auth.user">
+                    <div class="absolute top-0 left-0 inline-flex mt-3 ml-3 px-3 py-2 rounded-lg z-10  text-sm font-medium text-white select-none">
+                        <form @submit.prevent="toggleWhishlist">
+                         <button
+                             type="submit"
+                             :class="inWhishlist(hall.id) ? 'text-pink-500 p-1 rounded-full' : 'text-gray-500 hover:text-pink-500 p-1 rounded-full'"
+
+                             style="background: white">
+                             <svg
+                                 class="w-6 h-6"
+                                 viewBox="0 0 24 24"
+
+                             >
+                                 <path fill="currentColor" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+                             </svg>
+                         </button>
+                        </form>
+                    </div>
+                    </div>
+
+
                 </div>
 
                 <div class="mt-4">
@@ -130,6 +161,7 @@ const props = defineProps({
             </div>
         </Link>
     </div>
+<!--    :class="inWhishlist() ? 'text-red-500' : 'text-gray-500'"-->
 
 
 </template>

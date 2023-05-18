@@ -30,7 +30,8 @@ export default {
     props: {
         hall: Object,
         user: Object,
-        images: Array
+        images: Array,
+
     } ,
 
     data() {
