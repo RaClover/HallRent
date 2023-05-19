@@ -19,10 +19,21 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description');
-            $table->string('email');
-            $table->string('phone');
             $table->decimal('price', 8, 2);
             $table->integer('size');
+            $table->integer('capacity'); // how much people can be in this hall as maximum
+            $table->integer('floor_number')->nullable();
+            $table->enum('parking_available', ['free parking', 'paid parking', 'no parking'])->default('no parking');
+            $table->enum('pets_policy', ['No pets', 'Small pets', 'All pets'])->default('No pets');
+            $table->boolean('furniture');
+            $table->integer('toilets')->nullable();
+            $table->integer('kitchens')->nullable();
+            $table->text('smoking_policy');
+            $table->text('alcohol_policy');
+            $table->text('noise_restrictions');
+            $table->text('cleanup_requirements');
+            $table->decimal('security_deposit');
+            $table->text('cancellation_policy');
             $table->timestamps();
 
             $table->foreign('address_id')->references('id')->on('addresses');
