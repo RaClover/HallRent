@@ -54,6 +54,30 @@ class Hall extends Model
     {
         return $this->belongsToMany(Whishlist::class ,  'whishlists');
     }
+
+    public function workingHours(): HasOne
+    {
+        return $this->hasOne(WorkingHours::class);
+    }
+
+
+    public function amenities():BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class, 'hall_amenities');
+    }
+
+    public function features():BelongsToMany
+    {
+        return $this->belongsToMany(Feature::class, 'hall_features');
+    }
+
+
+    public function reviews():HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
     public function scopeWithTypes($query, $typeSlugs)
     {
         $query->when($typeSlugs, function ($query) use ($typeSlugs) {
