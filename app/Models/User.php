@@ -64,4 +64,10 @@ class User extends Authenticatable
             ->using(Whishlist::class);
     }
 
+
+    public function reviews():HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
 }
