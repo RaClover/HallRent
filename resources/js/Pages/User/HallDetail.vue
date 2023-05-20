@@ -250,16 +250,15 @@ export default {
                                         <h2 class="text-lg font-bold text-gray-700 dark:text-black">Availability</h2>
                                     </div>
                                     <div class="px-7">
-
                                         <AvailabilityModal />
                                     </div>
                                 </div>
                                 <div class="mt-6 ">
                                     <Link
-                                        :href="route('booking.contact')"
+                                        :href="route('booking.book')"
                                         as="button"
                                         class="w-full px-4 py-2 font-bold text-white bg-amber-600 lg:w-96 hover:bg-amber-600">
-                                        Contact {{ user.name}}
+                                        Start Booking
                                     </Link>
                                 </div>
                                 <div class="flex items-center mt-6 ">

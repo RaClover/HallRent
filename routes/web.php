@@ -111,7 +111,10 @@ Route::delete('/whishlist', [WhishlistController::class, 'destroy'])->name('whis
 
         // bookings routes
         Route::prefix('booking')->name('booking.')->middleware(['checkRole:user,partner', 'verified'])->group(function () {
-            Route::get('/contact' , [BookingController::class , 'contact'])->name('contact');
+            Route::get('/book', [BookingController::class, 'book'])->name('book');
+            Route::post('/book', [BookingController::class, 'book'])->name('book');
+            Route::put('/book', [BookingController::class, 'book'])->name('book');
+            Route::patch('/confirmation', [BookingController::class, 'book'])->name('confirmation');
         });
 
 
