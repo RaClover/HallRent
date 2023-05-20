@@ -2,27 +2,34 @@
 
 namespace Database\Factories;
 
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Type>
- */
 class TypeFactory extends Factory
 {
+    protected $model = Type::class;
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition()
     {
+        $name = fake()->unique()->randomElement([
+            'Children\'s birthday',
+            'Birthday',
+            'Wedding',
+            'New Year',
+            'Corporate',
+            'Graduation',
+            'Family Reunion',
+            'Special Event',
+        ]);
 
-        $name =fake()->sentence(2);
-        $slug = Str::slug($name);
         return [
             'name' => $name,
-            'slug' => $slug,
+            'slug' => Str::slug($name),
         ];
     }
 }

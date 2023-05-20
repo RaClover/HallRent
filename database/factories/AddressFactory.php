@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Address;
 use App\Models\Hall;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AddressFactory extends Factory
 {
+
+    protected $model = Address::class;
+
     /**
      * Define the model's default state.
      *
@@ -18,9 +22,8 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'city' => 'Kazan',
+            'city' => fake()->city,
             'street' =>fake()->streetAddress,
-            'hall_id' => Hall::factory(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

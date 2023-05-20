@@ -6,7 +6,11 @@ import {Link} from "@inertiajs/vue3";
 import DropdownLink from "@/Components/DropdownLink.vue";
 
 export default defineComponent({
-    components: {DropdownLink, Link, Dropdown}
+    components: {
+        DropdownLink,
+        Link,
+        Dropdown
+    }
 })
 </script>
 <template>
@@ -30,7 +34,7 @@ export default defineComponent({
             </div>
 
             <!-- Links Section -->
-            <div class="items-center hidden space-x-8 lg:flex">
+            <div class="items-center hidden space-x-32 lg:flex">
                 <Link
                     :href="route('homePage')"
                     class="flex text-gray-600 hover:text-blue-500
@@ -38,27 +42,7 @@ export default defineComponent({
                     Home
                 </Link>
 
-                <Link
-                    class="flex text-gray-600
-                    cursor-pointer transition-colors duration-300
-                    font-semibold text-blue-600">
-                    Themes
-                </Link>
 
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Developers
-                </Link>
-
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Pricing
-                </Link>
-
-                <Link class="flex text-gray-600 hover:text-blue-500
-                    cursor-pointer transition-colors duration-300">
-                    Blog
-                </Link>
 
                 <Link
                     :href="route('aboutUs')"
@@ -66,12 +50,46 @@ export default defineComponent({
                     cursor-pointer transition-colors duration-300">
                     About Us
                 </Link>
+
+                <Link
+                    :href="route('contactUs.create')"
+                    class="flex text-gray-600 hover:text-blue-500
+                    cursor-pointer transition-colors duration-300">
+                    Contact Us
+                </Link>
             </div>
 
 
 
             <!-- Icon Menu Section -->
             <div v-if="!this.$page.props.auth.user" class="flex items-center space-x-5">
+
+
+
+                <Link
+                    class="inline-flex items-center gap-2 rounded-md border border-white bg-gray-200 px-4 py-3  motion-safe:hover:scale-[1.02]  hover:bg-gray-300  active:bg-white/90"
+                    :href="route('becomePartner')"
+                    preserve-scroll
+                    scroll-region
+                >
+                    <span class="text-sm font-medium">Become Partner</span>
+
+                    <svg
+                        class="h-5 w-5 rtl:rotate-180"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                    </svg>
+                </Link>
+
                 <!-- Register -->
                 <Link
                     :href="route('register')"
@@ -135,7 +153,23 @@ export default defineComponent({
                         </template>
 
                         <template #content>
-                            <DropdownLink :href="route('my.profile.edit')"> Profile </DropdownLink>
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'user'"
+                                :href="route('my.profile.edit')">
+                                Profile
+                            </DropdownLink>
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'partner'"
+                                :href="route('partner.dashboard')">
+                                Profile
+                            </DropdownLink>
+
+                            <DropdownLink
+                                v-if="$page.props.auth.user.role === 'admin'"
+                                :href="route('admin.dashboard')">
+                                Profile
+                            </DropdownLink>
+
                             <DropdownLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </DropdownLink>

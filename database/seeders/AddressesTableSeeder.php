@@ -14,12 +14,6 @@ class AddressesTableSeeder extends Seeder
      */
     public function run()
     {
-        $halls = Hall::all();
-
-        foreach ($halls as $hall) {
-            Address::factory()->create([
-                'hall_id' => $hall->id,
-            ]);
-        }
+        Address::factory()->count(1)->create();
     }
 }

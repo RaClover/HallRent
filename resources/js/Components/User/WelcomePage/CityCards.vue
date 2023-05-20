@@ -11,7 +11,24 @@ export default {
             type: Array,
             required: true
         },
-    }
+        cityImages: {
+            type: Array,
+            required: true
+        },
+    },
+
+
+    methods: {
+        getCityImage(city) {
+            // Logic to get the city image based on the city name
+            // You can access the cityImages array passed from the Welcome.vue component
+            // and retrieve the image URL based on the city name
+
+            // Assuming cityImages is an array of objects with city names as keys and image URLs as values
+            const cityImages = this.$props.cityImages;
+            return cityImages[city] || "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"; // Default image URL if city image is not available
+        },
+    },
 }
 </script>
 
@@ -25,6 +42,8 @@ export default {
             <div
                 class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:space-y-0">
 
+
+
                 <Link
 
                     v-for="addr in address.data"
@@ -32,8 +51,8 @@ export default {
                     class="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-50 transform transition duration-300 hover:scale-105"
                 >
                         <img
-                            class="rounded-t-lg"
-                            src="https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"
+                            class="rounded-t-lg h-60 w-full"
+                            :src="getCityImage(addr.city)"
                             alt=""
                         />
                     <div class="p-6">
@@ -42,7 +61,7 @@ export default {
                         >
                             {{ addr.city }}
                         </h5>
-                        <h1 class="text-center text-gray-600 p-2">{{ addr.hallCount }} halls</h1>
+                        <h1 class="text-center text-gray-600 p-2">{{ addr.halls_count }} halls</h1>
                         <p class="mb-4 text-base text-black dark:text-black">
                             Some quick example text to build on the card title and make up the bulk of the card's content.
                         </p>

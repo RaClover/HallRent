@@ -11,21 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('halls', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('type_id')->unsigned();
-            $table->string('name')->unique();
-            $table->string('slug');
-            $table->text('description');
+            $table->string('name');
             $table->string('email');
-            $table->string('phone');
-            $table->decimal('price', 8, 2);
-            $table->integer('size');
+            $table->text('message');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('type_id')->references('id')->on('types');
+
         });
     }
 
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('halls');
+        Schema::dropIfExists('contacts');
     }
 };

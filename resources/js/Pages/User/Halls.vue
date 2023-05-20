@@ -1,6 +1,6 @@
 <script setup>
 import NavBarLayout from "@/Layouts/User/NavBarLayout.vue";
-import {Link, router} from "@inertiajs/vue3";
+import {Link, router, usePage} from "@inertiajs/vue3";
 import HallSearchFilter from "@/Components/User/HallsFilters/HallSearchFilter.vue";
 import HallTypeFilter from "@/Components/User/HallsFilters/HallTypeFilter.vue";
 import HallPriceFilter from "@/Components/User/HallsFilters/HallPriceFilter.vue";
@@ -19,13 +19,13 @@ const props = defineProps({
     halls: Array ,
     types: Array,
     city: String ,
-    links: String,
     type: String,
     search: String,
     min_price: String,
     max_price: String,
     sortBy: String,
 });
+
 
 
 const filters = ref({
@@ -64,6 +64,7 @@ watch(filters.value, value => {
 
 
 </script>
+
 
 <template>
 <NavBarLayout>
@@ -112,9 +113,11 @@ watch(filters.value, value => {
                         v-for="hall in halls.data"
                         :key="hall.id"
                         :hall="hall"
+                        :city="city"
                     ></HallCard>
 
                 </div>
+
 
 
             </div>
@@ -122,10 +125,17 @@ watch(filters.value, value => {
         </div>
 
     </div>
+
+
+    <Pagination
+        v-if="halls.links.next || halls.links.prev"
+        :links="halls.meta.links"
+        :meta="halls.links"
+    ></Pagination>
     <!-- Display the pagination here -->
-    <div class="flex justify-center p-6 mt-4  ">
-        <div v-html="links"></div>
-    </div>
+<!--    <div class="flex justify-center p-6 mt-4  ">-->
+<!--        <div v-html="links"></div>-->
+<!--    </div>-->
 
 </NavBarLayout>
 

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Whishlist;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -51,7 +52,13 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
 
-            // Flash messages
+            // Return only the count
+            'whishlist' => auth()->user() ? Whishlist::getContent() : [],
+
+
+//            dd($request->user() ? $request->user()->whishlist->pluck('id')->toArray() : []),
+
+        // Flash messages
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'error' => fn () => $request->session()->get('error'),

@@ -12,6 +12,9 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\RedirectAuthenticatedUsersController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\HallsController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\ContactUsController;
+use App\Http\Controllers\User\WhishlistController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,16 +27,35 @@ use App\Http\Controllers\User\HallsController;
 */
 Route::get('/', [HomeController::class, 'home'])->name('homePage');
 Route::get('/aboutUs' , [HomeController::class , 'aboutUs'])->name('aboutUs');
+Route::get('/contactUs' , [HomeController::class , 'contactUs'])->name('contactUs');
 Route::get('/{city}/halls' , [HallsController::class , 'index'])->name('halls.index');
-Route::get('/{city}/hall/{hallName}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
+Route::get('{city}/halls/{hall}' , [HallsController::class , 'hallDetail'])->name('hallDetail');
+Route::get('/users/show/{user}' , [HallsController::class , 'userPortfolio'])->name('userPortfolio');
 
+
+
+
+
+//routes for the contact us page
+Route::prefix('contactUs')->middleware('auth')->name('contactUs.')->group(function () {
+    Route::get('/create', [ContactUsController::class , 'create'])->name('create');
+    Route::post('/store' , [ContactUsController::class , 'store'])->name('store');
+});
+
+
+// WHISHLIST
+Route::get('/whishlist', [WhishlistController::class, 'index'])->name('whishlist.index');
+Route::post('/whishlist/{hall}', [WhishlistController::class, 'toggle'])->name('whishlist.toggle');
+Route::post('/whishlist/{hall}/move-to-cart', [WhishlistController::class, 'moveToCart'])->name('whishlist.moveToCart');
+Route::delete('/whishlist', [WhishlistController::class, 'destroy'])->name('whishlist.destroy');
 
 
 
 
     Route::group(['middleware' => 'auth'], function() {
         Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
-        Route::get("/redirectAuthenticatedUsers", [RedirectAuthenticatedUsersController::class, "home"]);
+        Route::get("/redirectAuthenticatedUsers", [RedirectAuthenticatedUsersController::class, "home"])
+            ->middleware('auth' , 'verified');
 
 
 
@@ -76,15 +98,21 @@ Route::get('/{city}/hall/{hallName}' , [HallsController::class , 'hallDetail'])-
             Route::get('/profile', [UserProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [UserProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [UserProfileController::class, 'destroy'])->name('profile.destroy');
-            Route::get('orders' , [UserProfileController::class , 'orders'])->name('orders');
-            Route::get('wishlists' , [UserProfileController::class , 'wishlists'])->name('wishlists');
-            Route::get('messages' , [UserProfileController::class , 'messages'])->name('messages');
+            Route::get('documents' , [UserProfileController::class , 'documents'])->name('documents');
             Route::get('notifications' , [UserProfileController::class , 'notifications'])->name('notifications');
-            Route::get('settings' , [UserProfileController::class , 'settings'])->name('settings');
+            Route::get('messages' , [UserProfileController::class , 'messages'])->name('messages');
+            Route::get('bookings' , [UserProfileController::class , 'bookings'])->name('bookings');
+            Route::get('wishlists' , [UserProfileController::class , 'wishlists'])->name('wishlists');
             Route::inertia('/dashboard', 'User/UserDashboard')->name('dashboard');
         });
 
 
+
+
+        // bookings routes
+        Route::prefix('booking')->name('booking.')->middleware(['checkRole:user,partner', 'verified'])->group(function () {
+            Route::get('/contact' , [BookingController::class , 'contact'])->name('contact');
+        });
 
 
     });

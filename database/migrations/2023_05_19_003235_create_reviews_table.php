@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hall_images', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hall_id')->unsigned();
-            $table->foreign('hall_id')->references('id')->on('halls');
-            $table->string('path')->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->unsignedTinyInteger('rating');
+            $table->text('comment');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('hall_id')->references('id')->on('halls')->onDelete('cascade');
 
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hall_images');
+        Schema::dropIfExists('reviews');
     }
 };

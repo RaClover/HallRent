@@ -6,6 +6,8 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
@@ -24,31 +26,55 @@ class Hall extends Model
         'user_id',
         'address_id'
     ];
-
-
     public function user():BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-
-    public function address():HasOne
-    {
-        return $this->hasOne(Address::class);
-    }
-
-
-
-    public function type()
+    public function type():BelongsTo
     {
         return $this->belongsTo(Type::class);
     }
 
-    public function bookings()
+    public function address():BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    public function bookings():BelongsToMany
     {
         return $this->belongsToMany(Booking::class, 'booking_hall')
             ->withPivot(['quantity', 'unit_price'])
             ->withTimestamps();
+    }
+    public function images():HasMany
+    {
+        return $this->hasMany(HallImage::class);
+    }
+    public function wishlists():BelongsToMany
+    {
+        return $this->belongsToMany(Whishlist::class ,  'whishlists');
+    }
+
+    public function workingHours(): HasOne
+    {
+        return $this->hasOne(WorkingHours::class);
+    }
+
+
+    public function amenities():BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class, 'hall_amenities');
+    }
+
+    public function features():BelongsToMany
+    {
+        return $this->belongsToMany(Feature::class, 'hall_features');
+    }
+
+
+    public function reviews():HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
 
@@ -64,7 +90,6 @@ class Hall extends Model
             });
         });
     }
-
     public function scopeWithMinPrice($query, $min_price)
     {
         $query->when($min_price, function ($query) use ($min_price) {
@@ -78,35 +103,33 @@ class Hall extends Model
             $query->where('price', '<=', $max_price);
         });
     }
-
     public function scopeWithSearch($query, $search)
     {
         $query->when($search, function ($query) use ($search) {
             $query->where('name', 'LIKE', "%$search%");
         });
     }
-
-//    public function scopeWithSortBy($query, $sortBy)
-//    {
-//        $query->when($sortBy, function ($query) use ($sortBy) {
-//            switch ($sortBy) {
-//                case 'price_desc':
-//                    $query->orderBy('price', 'desc');
-//                    break;
-//                case 'price_asc':
-//                    $query->orderBy('price', 'asc');
-//                    break;
-//                case 'best_selling':
-//                    $query
-//                        ->selectRaw('halls.*, SUM(quantity) as best_selling')
-//                        ->leftJoin('order_product', 'products.id', '=', 'order_product.product_id')
-//                        ->groupBy('products.id')
-//                        ->orderBy('best_selling', 'desc');
-//                    break;
-//                default:
-//                    $query->orderBy('created_at', 'desc');
-//                    break;
-//            }
-//        });
-//    }
+    public function scopeWithSortBy($query, $sortBy)
+    {
+        $query->when($sortBy, function ($query) use ($sortBy) {
+            switch ($sortBy) {
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'best_selling':
+                    $query
+                        ->selectRaw('halls.*, SUM(quantity) as best_selling')
+                        ->leftJoin('order_product', 'products.id', '=', 'order_product.product_id')
+                        ->groupBy('products.id')
+                        ->orderBy('best_selling', 'desc');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
+        });
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HallImageResource;
 use App\Models\Address;
 use App\Models\Hall;
 use App\Models\Type;
@@ -15,26 +16,25 @@ class HallsController extends Controller
 {
     public function index(Request $request , $city)
     {
-        $halls = HallResource::collection(
-            Hall::query()
-                ->join('addresses', 'halls.id', '=', 'addresses.hall_id')
-                ->withTypes($request->type ?? '')
-                ->withMinPrice($request->min_price ?? '')
-                ->withMaxPrice($request->max_price ?? '')
-                ->withSearch($request->search ?? '')
-                ->orderBy($request->sortBy ?? 'name')
-                ->with('type')
-                ->where('addresses.city', $city)
-                ->paginate(8)
-                ->withQueryString()
-        );
+        $address = Address::where('city', $city)->first();
 
-        $types = TypeResource::collection(Type::withCount('halls')->get());
-        $links = $halls->links()->toHtml();
+            $halls = HallResource::collection(
+                $address->halls()
+                    ->withTypes($request->type ?? '')
+                    ->withMinPrice($request->min_price ?? '')
+                    ->withMaxPrice($request->max_price ?? '')
+                    ->withSearch($request->search ?? '')
+                    ->with('type' , 'user' , 'images')
+                    ->withSortBy($request->sortBy ?? '')
+                    ->paginate(8)
+                    ->withQueryString()
+            );
+
+            $types = TypeResource::collection(Type::withCount('halls')->get());
+
         return Inertia::render('User/Halls' , [
             'halls' => $halls ,
             'city' => $city ,
-            'links' => $links,
             'types' => $types,
             'type' => $request->type ?? '',
             'min_price' => $request->min_price ?? '',
@@ -53,9 +53,25 @@ class HallsController extends Controller
 
 
 
-    public function hallDetail()
+    public function hallDetail( $city  , Hall $hall)
     {
-        return Inertia::render('User/HallDetail');
+
+        $user = $hall->user;
+//        $images = HallImageResource::collection($hall->images);
+        $images = $hall->images()->get();
+
+        return Inertia::render('User/HallDetail' , [
+            'hall' => $hall ,
+            'user' => $user,
+            'images' => $images->toArray()
+        ]);
+    }
+
+
+    public function userPortfolio()
+    {
+
+        return Inertia::render('User/UserPortfolio');
     }
 
 

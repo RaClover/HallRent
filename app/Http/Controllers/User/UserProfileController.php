@@ -66,18 +66,10 @@ class UserProfileController extends Controller
     }
 
 
-
-
-    public function main()
-    {
-        return \inertia('User/Profile/Main');
-    }
-
-
-    public function orders()
+    public function bookings()
     {
 
-        return inertia('User/Profile/Orders');
+        return inertia('User/Profile/Bookings');
     }
 
 
@@ -97,9 +89,9 @@ class UserProfileController extends Controller
         return inertia('User/Profile/Notifications');
     }
 
-    public function settings()
+    public function documents()
     {
-        return inertia('User/Profile/Settings');
+        return inertia('User/Profile/Documents');
     }
 
 }
