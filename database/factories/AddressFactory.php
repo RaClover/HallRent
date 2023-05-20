@@ -18,7 +18,7 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'city' => 'Saint Petersburg',
+            'city' => 'Kazan',
             'street' =>fake()->streetAddress,
             'hall_id' => Hall::factory(),
             'created_at' => now(),

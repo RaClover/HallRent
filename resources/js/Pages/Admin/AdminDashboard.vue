@@ -1,7 +1,23 @@
-<script setup>
+<script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import AdminLayout from "@/Layouts/Admin/AdminLayout.vue";
+
+export default {
+    components : {
+        AuthenticatedLayout,
+        Head ,
+        AdminLayout
+    } ,
+
+    props : {
+
+    } ,
+
+    methods: {
+
+    }
+}
 </script>
 
 <template>
