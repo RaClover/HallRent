@@ -1,6 +1,7 @@
 <?php
 
 //use App\Http\Controllers\Partner\MarketController;
+use App\Http\Controllers\Partner\HallListController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\SuperProfileController;
 use App\Http\Controllers\Admin\AdminProfileController;
@@ -88,6 +89,7 @@ Route::delete('/whishlist', [WhishlistController::class, 'destroy'])->name('whis
             Route::patch('/profile', [PartnerProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [PartnerProfileController::class, 'destroy'])->name('profile.destroy');
             Route::inertia('/dashboard', 'Partner/PartnerDashboard')->name('dashboard');
+            Route::resource('hallList', HallListController::class);
 
         });
 
@@ -111,9 +113,9 @@ Route::delete('/whishlist', [WhishlistController::class, 'destroy'])->name('whis
 
         // bookings routes
         Route::prefix('booking')->name('booking.')->middleware(['checkRole:user,partner', 'verified'])->group(function () {
-            Route::get('/book', [BookingController::class, 'book'])->name('book');
-            Route::post('/book', [BookingController::class, 'book'])->name('book');
-            Route::put('/book', [BookingController::class, 'book'])->name('book');
+            Route::match(['get', 'post' , 'put'],'/book/{hall}', [BookingController::class, 'book'])->name('book');
+//            Route::post('/book', [BookingController::class, 'book'])->name('book');
+//            Route::put('/book', [BookingController::class, 'book'])->name('book');
             Route::patch('/confirmation', [BookingController::class, 'book'])->name('confirmation');
         });
 

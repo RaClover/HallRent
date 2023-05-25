@@ -1,6 +1,7 @@
 
 <script>
 import {Link} from "@inertiajs/vue3";
+import {reactive, watch, watchEffect} from "vue";
 
 export default {
     components: {
@@ -16,8 +17,6 @@ export default {
             required: true
         },
     },
-
-
     methods: {
         getCityImage(city) {
             // Logic to get the city image based on the city name
@@ -48,7 +47,7 @@ export default {
 
                     v-for="addr in address.data"
                     :href="route('halls.index' , {city: addr.city})"
-                    class="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-50 transform transition duration-300 hover:scale-105"
+                    class="  block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-50 transform transition duration-300 hover:scale-105 "
                 >
                         <img
                             class="rounded-t-lg h-60 w-full"
@@ -62,9 +61,7 @@ export default {
                             {{ addr.city }}
                         </h5>
                         <h1 class="text-center text-gray-600 p-2">{{ addr.halls_count }} halls</h1>
-                        <p class="mb-4 text-base text-black dark:text-black">
-                            Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </p>
+
 
                     </div>
                 </Link>

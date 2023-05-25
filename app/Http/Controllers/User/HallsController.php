@@ -24,13 +24,14 @@ class HallsController extends Controller
                     ->withMinPrice($request->min_price ?? '')
                     ->withMaxPrice($request->max_price ?? '')
                     ->withSearch($request->search ?? '')
-                    ->with('type' , 'user' , 'images')
+                    ->with('type' , 'user' , 'images' , 'address')
                     ->withSortBy($request->sortBy ?? '')
-                    ->paginate(8)
+                    ->paginate(33)
                     ->withQueryString()
             );
 
             $types = TypeResource::collection(Type::withCount('halls')->get());
+
 
         return Inertia::render('User/Halls' , [
             'halls' => $halls ,
@@ -57,13 +58,20 @@ class HallsController extends Controller
     {
 
         $user = $hall->user;
-//        $images = HallImageResource::collection($hall->images);
+        $type = $hall->type;
         $images = $hall->images()->get();
+
+// Get similar halls with the same type name, along with user and images
+        $similarHalls = Hall::whereHas('type', function ($query) use ($type) {
+            $query->where('name', $type->name);
+        })->where('id', '!=', $hall->id)->with('user', 'images' , 'type' , 'address')->paginate(3);
+
 
         return Inertia::render('User/HallDetail' , [
             'hall' => $hall ,
             'user' => $user,
-            'images' => $images->toArray()
+            'images' => $images->toArray(),
+            'similarHalls' => $similarHalls
         ]);
     }
 

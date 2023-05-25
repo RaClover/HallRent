@@ -14,7 +14,7 @@ export default defineComponent({
 })
 </script>
 <template>
-    <div class="flex flex-col  mt-28">
+    <div class="flex flex-col  mt-20">
         <!-- Navbar -->
         <nav class="flex justify-around py-1 bg-white/80
             backdrop-blur-md shadow-md w-full

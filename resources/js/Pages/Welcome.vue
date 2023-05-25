@@ -44,6 +44,10 @@ export default {
             type : Array ,
             required : true
         },
+        hallImages: {
+          type: Array,
+            required: true
+        },
     },
     setup() {
         const { route } = usePage();
@@ -56,13 +60,41 @@ export default {
             state,
         };
     },
+
+
+    data() {
+        return {
+            currentImageIndex: 0,
+            timer: null,
+        };
+    },
+    computed: {
+        hallImages() {
+            return this.$page.props.hallImages;
+        },
+        currentImageUrl() {
+            return this.hallImages[this.currentImageIndex];
+        },
+        imageTransitionDuration() {
+            // Adjust the transition duration as desired (in milliseconds)
+            return 20000; // Example: 5 seconds
+        },
+    },
+    mounted() {
+        this.timer = setInterval(() => {
+            this.currentImageIndex = (this.currentImageIndex + 1) % this.hallImages.length;
+        }, this.imageTransitionDuration);
+    },
+    beforeUnmount() {
+        clearInterval(this.timer);
+    },
 }
 </script>
 
 
 <template>
 <NavBarLayout>
-    <section class="banner_main bg-no-repeat flex justify-center content-center items-center">
+    <section :style="{ backgroundImage: `url(${currentImageUrl})` }" class="banner_main bg-no-repeat flex justify-center content-center items-center">
         <div class="container mx-auto sm:px-4">
             <div class="flex flex-wrap ">
                 <div class="md:w-full pr-4 pl-4">
@@ -73,11 +105,6 @@ export default {
                             <div class=" rounded-xl">
                                 <div class="grid xl:grid-cols-4 gap-4">
                                     <CityDropdownList v-model="state.selectedCity" :value="address.city" :cities="cities"/>
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -88,7 +115,7 @@ export default {
     </section>
 
 
-   <CityCards :address="address" :cityImages="cityImages"/>
+   <CityCards :address="address" :cityImages="cityImages" />
 
 <!--    Why us section -->
     <section>
@@ -321,12 +348,16 @@ export default {
 
 
 
-    <section class="flex items-center bg-stone-50 xl:h-screen font-poppins ">
+    <section
+
+        class="flex items-center bg-stone-50 xl:h-screen font-poppins ">
         <div class="justify-center flex-1 px-4 py-6 mx-auto max-w-7xl lg:py-4 md:px-6">
             <div class=" text-center">
                 <h2 class="text-3xl font-bold mb-12">See What Customers Say about Us</h2>
             </div>
-            <div class="flex items-center justify-around">
+            <div
+
+                class="flex items-center justify-around">
                 <button
                     class="flex-shrink-0 hidden w-16 h-16 p-5 mr-2 bg-blue-500 rounded-full text-gray-50 lg:block hover:bg-blue-800">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -433,14 +464,36 @@ export default {
 /** banner section **/
 
 .banner_main {
-    background: url('https://static.vecteezy.com/system/resources/previews/011/651/324/original/newyork-city-highrise-skyline-simplicity-flat-design-free-png.png');
-    min-height: 300px;
+    //background: url('https://static.vecteezy.com/system/resources/previews/011/651/324/original/newyork-city-highrise-skyline-simplicity-flat-design-free-png.png');
+    min-height: 600px;
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
     background-size: 100% 100%;
+    animation: fade-in-out 20s ease-in-out infinite; /* Adjust the animation duration */
+
 }
+
+
+
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
 
 .text-bg {
     text-align: center;
